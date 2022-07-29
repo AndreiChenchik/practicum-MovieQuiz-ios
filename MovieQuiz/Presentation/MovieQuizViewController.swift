@@ -27,24 +27,34 @@ final class MovieQuizViewController: UIViewController {
     }
     
     private func show(quize step: QuizeStepViewModel) {
-        imageView.layer.borderWidth = 0
-        imageView.image = step.image
+        yesButton.isEnabled = true
+        noButton.isEnabled = true
+        
         textLabel.text = step.question
         counterLabel.text = step.questionNumber
         
-        yesButton.isEnabled = true
-        noButton.isEnabled = true
+        UIView.animate(withDuration: 0.25) {
+            self.imageView.layer.borderWidth = 0
+        }
+        
+        UIView.transition(with: imageView,
+                          duration: 0.25,
+                          options: .transitionCrossDissolve) {
+            self.imageView.image = step.image
+        }
     }
     
     private func showAnswerResult(isCorrect: Bool) {
-        imageView.layer.masksToBounds = true
-        imageView.layer.cornerRadius = 20
-        
-        imageView.layer.borderWidth = 8
-        imageView.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
-
         yesButton.isEnabled = false
         noButton.isEnabled = false
+        
+        UIView.animate(withDuration: 0.25) {
+            self.imageView.layer.masksToBounds = true
+            self.imageView.layer.cornerRadius = 20
+            
+            self.imageView.layer.borderWidth = 8
+            self.imageView.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
+        }
     }
     
     
