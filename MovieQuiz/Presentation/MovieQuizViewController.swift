@@ -19,11 +19,11 @@ final class MovieQuizViewController: UIViewController {
     }
     
     private func displayQuestion() {
-        let viewModel = QuizeStepViewModel(
-            model: state.currentQuestion,
-            number: "\(state.currentQuestionNumber)/\(state.totalQuestions)")
-        
-        show(quize: viewModel)
+        let questionViewModel = convert(
+            from: state.currentQuestion,
+            with: "\(state.currentQuestionNumber)/\(state.totalQuestions)")
+
+        show(quize: questionViewModel)
     }
     
     private func show(quize step: QuizeStepViewModel) {
@@ -72,7 +72,8 @@ final class MovieQuizViewController: UIViewController {
         if state.currentQuestionIndex >= state.totalQuestions - 1 {
             endGameSession()
             
-            show(quize: QuizeResultViewModel(state: state))
+            let resultsViewModel = convert(from: state)
+            show(quize: resultsViewModel)
             
             state.currentScore = 0
             state.currentQuestionIndex = 0
@@ -142,33 +143,40 @@ extension MovieQuizViewController {
         let image: UIImage
         let question: String
         let questionNumber: String
-        
-        init(model: QuizeQuestion, number: String) {
-            image = UIImage(named: model.image) ?? .remove
-            question = model.text
-            questionNumber = number
-        }
     }
     
     struct QuizeResultViewModel {
         let title: String
         let text: String
         let buttonText: String
+    }
+}
+
+// MARK: - Data Converters
+extension MovieQuizViewController {
+    func convert(from model: QuizeQuestion, with number: String) -> QuizeStepViewModel {
+        let image = UIImage(named: model.image) ?? .remove
+        let question = model.text
+        let questionNumber = number
         
-        init (state: GameState) {
-            title = "Этот раунд окончен!"
-            buttonText = "Сыграть еще раз"
-            
-            let totalQuestions = state.questions.count
-            let accuracy = String(format: "%.2f", state.averageAnswerAccuracy * 100)
-            
-            text = """
-            Ваш результат: \(state.currentScore)/\(totalQuestions)
-            Количество сыграных квизов: \(state.totalGamesCount)
-            Рекорд: \(state.bestScore)/\(totalQuestions) (\(state.bestGameDateString))
-            Средняя точность: \(accuracy)%
-            """
-        }
+        return QuizeStepViewModel(image: image, question: question, questionNumber: questionNumber)
+    }
+    
+    func convert(from state: GameState) -> QuizeResultViewModel {
+        let title = "Этот раунд окончен!"
+        let buttonText = "Сыграть еще раз"
+        
+        let totalQuestions = state.questions.count
+        let accuracy = String(format: "%.2f", state.averageAnswerAccuracy * 100)
+        
+        let text = """
+        Ваш результат: \(state.currentScore)/\(totalQuestions)
+        Количество сыграных квизов: \(state.totalGamesCount)
+        Рекорд: \(state.bestScore)/\(totalQuestions) (\(state.bestGameDateString))
+        Средняя точность: \(accuracy)%
+        """
+        
+        return QuizeResultViewModel(title: title, text: text, buttonText: buttonText)
     }
 }
 
