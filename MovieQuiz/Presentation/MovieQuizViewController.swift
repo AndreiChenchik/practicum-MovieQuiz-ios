@@ -244,7 +244,13 @@ extension MovieQuizViewController {
     }
 
     private func convert(from state: GameState) -> QuizeResultViewModel {
-        let title = "Этот раунд окончен!"
+        let isIdealSession = state.currentScore == state.questions.count
+
+        let title =
+            isIdealSession
+            ? "Идеальный результат!"
+            : "Этот раунд окончен!"
+
         let buttonText = "Сыграть еще раз"
 
         let totalQuestions = state.questions.count
