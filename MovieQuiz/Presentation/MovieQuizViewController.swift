@@ -11,6 +11,7 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet weak var noButton: UIButton!
 
     // MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -21,7 +22,8 @@ final class MovieQuizViewController: UIViewController {
     private func displayQuestion() {
         let questionViewModel = convert(
             from: state.currentQuestion,
-            with: "\(state.currentQuestionNumber)/\(state.totalQuestions)")
+            with: "\(state.currentQuestionNumber)/\(state.totalQuestions)"
+        )
 
         show(quize: questionViewModel)
     }
@@ -40,8 +42,9 @@ final class MovieQuizViewController: UIViewController {
         UIView.transition(
             with: imageView,
             duration: 0.25,
-            options: .transitionCrossDissolve) {
-                self.imageView.image = step.image
+            options: .transitionCrossDissolve
+        ) {
+            self.imageView.image = step.image
         }
     }
 
@@ -54,7 +57,10 @@ final class MovieQuizViewController: UIViewController {
             self.imageView.layer.cornerRadius = 20
 
             self.imageView.layer.borderWidth = 8
-            self.imageView.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
+            self.imageView.layer.borderColor =
+                isCorrect
+                ? UIColor.ypGreen.cgColor
+                : UIColor.ypRed.cgColor
         }
     }
 
@@ -100,7 +106,9 @@ final class MovieQuizViewController: UIViewController {
         let totalGames = Double(state.totalGamesCount)
         let totalQuestions = Double(state.totalQuestions)
 
-        state.averageAnswerAccuracy = (avgAccuracy * totalGames + score / totalQuestions) / (totalGames + 1)
+        state.averageAnswerAccuracy = (
+            avgAccuracy * totalGames + score / totalQuestions
+        ) / (totalGames + 1)
 
         if state.currentScore > state.bestScore {
             state.bestScore = state.currentScore
@@ -111,12 +119,18 @@ final class MovieQuizViewController: UIViewController {
     }
 
     private func show(quize result: QuizeResultViewModel) {
-        let alert = UIAlertController(title: result.title, message: result.text, preferredStyle: .alert)
+        let alert = UIAlertController(
+            title: result.title,
+            message: result.text,
+            preferredStyle: .alert
+        )
 
-        let action = UIAlertAction(title: result.buttonText, style: .default) { _ in
+        let action = UIAlertAction(
+            title: result.buttonText,
+            style: .default
+        ) { _ in
             self.displayQuestion()
         }
-
 
         alert.addAction(action)
 
@@ -124,7 +138,9 @@ final class MovieQuizViewController: UIViewController {
     }
 }
 
+
 // MARK: - Models
+
 extension MovieQuizViewController {
     struct QuizeQuestion {
         let image: String
@@ -168,14 +184,25 @@ extension MovieQuizViewController {
     }
 }
 
+
 // MARK: - Data Converters
+
 extension MovieQuizViewController {
-    func convert(from model: QuizeQuestion, with number: String) -> QuizeStepViewModel {
+    func convert(
+        from model: QuizeQuestion,
+        with number: String
+    ) -> QuizeStepViewModel {
         let image = UIImage(named: model.image) ?? .remove
         let question = model.text
         let questionNumber = number
 
-        return QuizeStepViewModel(image: image, question: question, questionNumber: questionNumber)
+        let viewModel = QuizeStepViewModel(
+            image: image,
+            question: question,
+            questionNumber: questionNumber
+        )
+
+        return viewModel
     }
 
     func convert(from state: GameState) -> QuizeResultViewModel {
@@ -185,19 +212,30 @@ extension MovieQuizViewController {
         let totalQuestions = state.questions.count
         let accuracy = String(format: "%.2f", state.averageAnswerAccuracy * 100)
 
+        let bestGameDate = state.bestGameDateString
+        let bestGame = "\(state.bestScore)/\(totalQuestions) (\(bestGameDate))"
+
         let text = """
         Ваш результат: \(state.currentScore)/\(totalQuestions)
         Количество сыграных квизов: \(state.totalGamesCount)
-        Рекорд: \(state.bestScore)/\(totalQuestions) (\(state.bestGameDateString))
+        Рекорд: \(bestGame)
         Средняя точность: \(accuracy)%
         """
 
-        return QuizeResultViewModel(title: title, text: text, buttonText: buttonText)
+        let viewModel = QuizeResultViewModel(
+            title: title,
+            text: text,
+            buttonText: buttonText
+        )
+
+        return viewModel
     }
 }
 
 
+
 // MARK: - Mock Data
+
 extension MovieQuizViewController {
     func getQuestionsMock() -> [QuizeQuestion] {
         let data = [
@@ -247,7 +285,9 @@ extension MovieQuizViewController {
     }
 }
 
+
 // MARK: - StatusBar style
+
 extension MovieQuizViewController {
-    override var preferredStatusBarStyle: UIStatusBarStyle { return .lightContent }
+    override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent }
 }
