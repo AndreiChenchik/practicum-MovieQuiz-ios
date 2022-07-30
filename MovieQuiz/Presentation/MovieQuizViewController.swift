@@ -57,9 +57,6 @@ final class MovieQuizViewController: UIViewController {
         UIView.animate(withDuration: 0.25) { [weak self] in
             guard let self = self else { return }
 
-            self.imageView.layer.masksToBounds = true
-            self.imageView.layer.cornerRadius = 20
-
             self.imageView.layer.borderWidth = 8
             self.imageView.layer.borderColor =
                 isCorrect
