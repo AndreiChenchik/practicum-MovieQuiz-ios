@@ -162,13 +162,6 @@ extension MovieQuizViewController {
         var totalQuestions: Int { questions.count }
         var currentQuestion: QuizeQuestion { questions[currentQuestionIndex] }
         var currentQuestionNumber: Int { currentQuestionIndex + 1 }
-
-        var bestGameDateString: String {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd.MM.yy HH:mm"
-
-            return dateFormatter.string(from: bestScoreDate)
-        }
     }
 
     struct QuizeStepViewModel {
@@ -212,7 +205,7 @@ extension MovieQuizViewController {
         let totalQuestions = state.questions.count
         let accuracy = String(format: "%.2f", state.averageAnswerAccuracy * 100)
 
-        let bestGameDate = state.bestGameDateString
+        let bestGameDate = state.bestScoreDate.dateTimeString
         let bestGame = "\(state.bestScore)/\(totalQuestions) (\(bestGameDate))"
 
         let text = """
