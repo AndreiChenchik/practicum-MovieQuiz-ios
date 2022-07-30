@@ -131,8 +131,8 @@
 			buildPhases = (
 				AD1ABAAA2831907B00B3E448 /* Sources */,
 				AD1ABAAB2831907B00B3E448 /* Frameworks */,
-				AD77F5722857EDD20062FB14 /* Run SwiftLint */,
 				AD1ABAAC2831907B00B3E448 /* Resources */,
+				AD77F5722857EDD20062FB14 /* Run SwiftLint */,
 			);
 			buildRules = (
 			);
