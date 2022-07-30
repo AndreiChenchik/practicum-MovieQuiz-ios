@@ -7,8 +7,8 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private weak var textLabel: UILabel!
     @IBOutlet private weak var counterLabel: UILabel!
 
-    @IBOutlet weak var yesButton: UIButton!
-    @IBOutlet weak var noButton: UIButton!
+    @IBOutlet private weak var yesButton: UIButton!
+    @IBOutlet private weak var noButton: UIButton!
 
     // MARK: - Lifecycle
 
@@ -185,7 +185,7 @@ extension MovieQuizViewController {
 // MARK: - Data Converters
 
 extension MovieQuizViewController {
-    func convert(
+    private func convert(
         from model: QuizeQuestion,
         with number: String
     ) -> QuizeStepViewModel {
@@ -202,7 +202,7 @@ extension MovieQuizViewController {
         return viewModel
     }
 
-    func convert(from state: GameState) -> QuizeResultViewModel {
+    private func convert(from state: GameState) -> QuizeResultViewModel {
         let title = "Этот раунд окончен!"
         let buttonText = "Сыграть еще раз"
 
@@ -234,7 +234,7 @@ extension MovieQuizViewController {
 // MARK: - Mock Data
 
 extension MovieQuizViewController {
-    func getQuestionsMock() -> [QuizeQuestion] {
+    private func getQuestionsMock() -> [QuizeQuestion] {
         let data = [
             QuizeQuestion(
                 image: "The Godfather",
