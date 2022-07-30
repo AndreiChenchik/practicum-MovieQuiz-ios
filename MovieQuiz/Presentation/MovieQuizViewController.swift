@@ -127,6 +127,7 @@ extension MovieQuizViewController {
 
 
 // MARK: - Results UI
+
 extension MovieQuizViewController {
     class ResultsAlertController: UIAlertController {
         var delegate: MovieQuizViewController?
@@ -183,6 +184,7 @@ extension MovieQuizViewController {
         }
     }
 }
+
 
 // MARK: - Models
 
