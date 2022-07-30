@@ -120,18 +120,26 @@
                                     </stackView>
                                 </subviews>
                             </stackView>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qZr-lP-Ub7" userLabel="dimView">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" name="YP Black"/>
                         <constraints>
+                            <constraint firstItem="qZr-lP-Ub7" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="5TB-qY-gSS"/>
                             <constraint firstItem="jCT-OT-Pg7" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" constant="-20" id="FbG-As-VxW"/>
                             <constraint firstItem="jCT-OT-Pg7" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="Grz-gt-6E3"/>
+                            <constraint firstItem="qZr-lP-Ub7" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="N0p-Rj-ryq"/>
+                            <constraint firstAttribute="trailing" secondItem="qZr-lP-Ub7" secondAttribute="trailing" id="RAn-RM-lWN"/>
                             <constraint firstItem="jCT-OT-Pg7" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="Ukn-sM-gyy"/>
+                            <constraint firstAttribute="bottom" secondItem="qZr-lP-Ub7" secondAttribute="bottom" id="gDA-KM-2Ip"/>
                             <constraint firstItem="jCT-OT-Pg7" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="y3F-sA-oVg"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="counterLabel" destination="h0K-JO-VFr" id="wG0-WU-Xwe"/>
+                        <outlet property="dimView" destination="qZr-lP-Ub7" id="rtY-Hb-V94"/>
                         <outlet property="imageView" destination="EjF-mK-EnV" id="XRX-OO-d1m"/>
                         <outlet property="noButton" destination="ywP-RJ-8Oy" id="xMF-Wk-Nmf"/>
                         <outlet property="textLabel" destination="HQc-RI-JES" id="jF3-Gq-vfv"/>

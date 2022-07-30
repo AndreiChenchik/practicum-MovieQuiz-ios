@@ -10,6 +10,8 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private weak var yesButton: UIButton!
     @IBOutlet private weak var noButton: UIButton!
 
+    @IBOutlet private weak var dimView: UIView!
+
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
@@ -17,15 +19,6 @@ final class MovieQuizViewController: UIViewController {
 
         state.questions = getQuestionsMock()
         displayQuestion()
-    }
-
-    private func displayQuestion() {
-        let questionViewModel = convert(
-            from: state.currentQuestion,
-            with: "\(state.currentQuestionNumber)/\(state.totalQuestions)"
-        )
-
-        show(quize: questionViewModel)
     }
 
     private func show(quize step: QuizeStepViewModel) {
@@ -59,12 +52,11 @@ final class MovieQuizViewController: UIViewController {
 
             self.imageView.layer.borderWidth = 8
             self.imageView.layer.borderColor =
-                isCorrect
-                ? UIColor.ypGreen.cgColor
-                : UIColor.ypRed.cgColor
+            isCorrect
+            ? UIColor.ypGreen.cgColor
+            : UIColor.ypRed.cgColor
         }
     }
-
 
     @IBAction private func yesButtonClicked(_ sender: Any) {
         processAnswer(answer: true)
@@ -72,6 +64,20 @@ final class MovieQuizViewController: UIViewController {
 
     @IBAction private func noButtonClicked(_ sender: Any) {
         processAnswer(answer: false)
+    }
+}
+
+
+// MARK: - Game logic
+
+extension MovieQuizViewController {
+    private func displayQuestion() {
+        let questionViewModel = convert(
+            from: state.currentQuestion,
+            with: "\(state.currentQuestionNumber)/\(state.totalQuestions)"
+        )
+
+        show(quize: questionViewModel)
     }
 
     private func processAnswer(answer: Bool) {
@@ -84,7 +90,6 @@ final class MovieQuizViewController: UIViewController {
             self.showNextQuestionOrResults()
         }
     }
-
 
     private func showNextQuestionOrResults() {
         if state.currentQuestionIndex >= state.totalQuestions - 1 {
@@ -118,27 +123,66 @@ final class MovieQuizViewController: UIViewController {
 
         state.totalGamesCount += 1
     }
+}
+
+
+// MARK: - Results UI
+extension MovieQuizViewController {
+    class ResultsAlertController: UIAlertController {
+        var delegate: MovieQuizViewController? = nil
+
+        override func viewWillDisappear(_ animated: Bool) {
+            super.viewWillDisappear(animated)
+            delegate?.switchDimScreen(isEnabled: false)
+        }
+    }
 
     private func show(quize result: QuizeResultViewModel) {
-        let alert = UIAlertController(
+        let alert = ResultsAlertController(
             title: result.title,
             message: result.text,
             preferredStyle: .alert
         )
 
+        alert.delegate = self
+
         let action = UIAlertAction(
             title: result.buttonText,
             style: .default
         ) { _ in
+            self.switchDimScreen(isEnabled: false)
             self.displayQuestion()
         }
 
         alert.addAction(action)
 
+        self.switchDimScreen(isEnabled: true)
         self.present(alert, animated: true)
     }
-}
 
+    func switchDimScreen(isEnabled: Bool) {
+        // On enable: Unhide first and then transition to background color
+        if isEnabled {
+            self.dimView.isHidden = !isEnabled
+        }
+
+        UIView.transition(
+            with: dimView,
+            duration: 0.25,
+            options: .transitionCrossDissolve
+        ) { [weak self] in
+            self?.dimView.backgroundColor =
+                isEnabled
+                ? .ypBackground
+                : .clear
+        } completion: { [weak self] _ in
+            // On disable: Transition to clear color and then hide
+            if !isEnabled {
+                self?.dimView.isHidden = !isEnabled
+            }
+        }
+    }
+}
 
 // MARK: - Models
 
