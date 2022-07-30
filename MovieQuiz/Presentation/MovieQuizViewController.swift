@@ -29,9 +29,6 @@ final class MovieQuizViewController: UIViewController {
     }
 
     private func show(quize step: QuizeStepViewModel) {
-        yesButton.isEnabled = true
-        noButton.isEnabled = true
-
         textLabel.text = step.question
         counterLabel.text = step.questionNumber
 
@@ -45,6 +42,11 @@ final class MovieQuizViewController: UIViewController {
             options: .transitionCrossDissolve
         ) {
             self.imageView.image = step.image
+        } completion: { [weak self] _ in
+            guard let self = self else { return }
+
+            self.yesButton.isEnabled = true
+            self.noButton.isEnabled = true
         }
     }
 
@@ -79,7 +81,7 @@ final class MovieQuizViewController: UIViewController {
 
         showAnswerResult(isCorrect: isCorrect)
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
             self.showNextQuestionOrResults()
         }
     }
