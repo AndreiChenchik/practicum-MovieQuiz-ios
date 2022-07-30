@@ -32,16 +32,16 @@ final class MovieQuizViewController: UIViewController {
         textLabel.text = step.question
         counterLabel.text = step.questionNumber
 
-        UIView.animate(withDuration: 0.25) {
-            self.imageView.layer.borderWidth = 0
+        UIView.animate(withDuration: 0.25) { [weak self] in
+            self?.imageView.layer.borderWidth = 0
         }
 
         UIView.transition(
             with: imageView,
             duration: 0.25,
             options: .transitionCrossDissolve
-        ) {
-            self.imageView.image = step.image
+        ) { [weak self] in
+            self?.imageView.image = step.image
         } completion: { [weak self] _ in
             guard let self = self else { return }
 
@@ -54,7 +54,9 @@ final class MovieQuizViewController: UIViewController {
         yesButton.isEnabled = false
         noButton.isEnabled = false
 
-        UIView.animate(withDuration: 0.25) {
+        UIView.animate(withDuration: 0.25) { [weak self] in
+            guard let self = self else { return }
+
             self.imageView.layer.masksToBounds = true
             self.imageView.layer.cornerRadius = 20
 
