@@ -129,7 +129,7 @@ extension MovieQuizViewController {
 // MARK: - Results UI
 extension MovieQuizViewController {
     class ResultsAlertController: UIAlertController {
-        var delegate: MovieQuizViewController? = nil
+        var delegate: MovieQuizViewController?
 
         override func viewWillDisappear(_ animated: Bool) {
             super.viewWillDisappear(animated)
@@ -269,7 +269,6 @@ extension MovieQuizViewController {
         return viewModel
     }
 }
-
 
 
 // MARK: - Mock Data
