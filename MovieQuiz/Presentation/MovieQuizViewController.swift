@@ -189,12 +189,6 @@ extension MovieQuizViewController {
 // MARK: - Models
 
 extension MovieQuizViewController {
-    struct QuizQuestion {
-        let image: String
-        let text: String
-        let correctAnswer: Bool
-    }
-
     struct GameState {
         var questions: [QuizQuestion] = []
         var currentQuestionIndex: Int = 0
