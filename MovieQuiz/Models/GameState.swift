@@ -8,7 +8,7 @@
 import Foundation
 
 struct GameState {
-    let questionFactory: QuestionFactoryProtocol
+    var questionFactory: QuestionFactoryProtocol?
 
     var questionsAmount = 10
     var currentQuestion: QuizQuestion?

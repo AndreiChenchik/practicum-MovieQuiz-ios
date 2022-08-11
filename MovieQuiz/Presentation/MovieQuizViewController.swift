@@ -1,7 +1,7 @@
 import UIKit
 
 final class MovieQuizViewController: UIViewController {
-    private var state = GameState(questionFactory: QuestionFactory())
+    private var state = GameState()
 
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var textLabel: UILabel!
@@ -16,7 +16,9 @@ final class MovieQuizViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        displayNextQuestion()
+
+        state.questionFactory = QuestionFactory(delegate: self)
+        state.questionFactory?.requestNextQuestion()
     }
 
     private func show(question model: QuizStepViewModel) {
@@ -66,32 +68,32 @@ final class MovieQuizViewController: UIViewController {
 }
 
 
+// MARK: - QuestionFactoryDelegate
+
+extension MovieQuizViewController: QuestionFactoryDelegate {
+    func didRecieveNextQuestion(question: QuizQuestion?) {
+        guard let question = question else { return }
+
+        self.state.currentQuestion = question
+        self.state.currentQuestionNumber += 1
+
+        let questionNumber = self.state.currentQuestionNumber
+        let questionsAmmount = self.state.questionsAmount
+        let questionViewModel = convert(
+            from: question,
+            with: "\(questionNumber)/\(questionsAmmount)"
+        )
+
+        DispatchQueue.main.async {
+            self.show(question: questionViewModel)
+        }
+    }
+}
+
+
 // MARK: - Game logic
 
 extension MovieQuizViewController {
-    private func displayNextQuestion() {
-        state.questionFactory.requestNextQuestion { [weak self] question in
-            guard
-                let self = self,
-                let question = question
-            else { return }
-
-            self.state.currentQuestion = question
-            self.state.currentQuestionNumber += 1
-
-            let questionNumber = self.state.currentQuestionNumber
-            let questionsAmmount = self.state.questionsAmount
-            let questionViewModel = convert(
-                from: question,
-                with: "\(questionNumber)/\(questionsAmmount)"
-            )
-
-            DispatchQueue.main.async {
-                self.show(question: questionViewModel)
-            }
-        }
-    }
-
     private func processAnswer(answer: Bool) {
         guard let currentQuestion = state.currentQuestion else { return }
 
@@ -115,7 +117,7 @@ extension MovieQuizViewController {
             state.currentScore = 0
             state.currentQuestionNumber = 0
         } else {
-            displayNextQuestion()
+            state.questionFactory?.requestNextQuestion()
         }
     }
 
@@ -165,7 +167,7 @@ extension MovieQuizViewController {
             style: .default
         ) { _ in
             self.switchDimScreen(isEnabled: false)
-            self.displayNextQuestion()
+            self.state.questionFactory?.requestNextQuestion()
         }
 
         alert.addAction(action)
