@@ -2,6 +2,7 @@ import UIKit
 
 final class MovieQuizViewController: UIViewController {
     private var state = GameState()
+    private var resultPresenter = ResultPresenter()
 
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var textLabel: UILabel!
@@ -112,7 +113,13 @@ extension MovieQuizViewController {
             endGameSession()
 
             let resultsViewModel = convert(from: state)
-            show(result: resultsViewModel)
+
+            resultPresenter.displayResults(
+                resultsViewModel,
+                over: self
+            ) { [weak self] in
+                self?.state.questionFactory?.requestNextQuestion()
+            }
 
             state.currentScore = 0
             state.currentQuestionNumber = 0
@@ -137,66 +144,6 @@ extension MovieQuizViewController {
         }
 
         state.totalGamesCount += 1
-    }
-}
-
-
-// MARK: - Results UI
-
-extension MovieQuizViewController {
-    class ResultsAlertController: UIAlertController {
-        var delegate: MovieQuizViewController?
-
-        override func viewWillDisappear(_ animated: Bool) {
-            super.viewWillDisappear(animated)
-            delegate?.switchDimScreen(isEnabled: false)
-        }
-    }
-
-    private func show(result model: QuizResultViewModel) {
-        let alert = ResultsAlertController(
-            title: model.title,
-            message: model.text,
-            preferredStyle: .alert
-        )
-
-        alert.delegate = self
-
-        let action = UIAlertAction(
-            title: model.buttonText,
-            style: .default
-        ) { _ in
-            self.switchDimScreen(isEnabled: false)
-            self.state.questionFactory?.requestNextQuestion()
-        }
-
-        alert.addAction(action)
-
-        self.switchDimScreen(isEnabled: true)
-        self.present(alert, animated: true)
-    }
-
-    func switchDimScreen(isEnabled: Bool) {
-        // On enable: Unhide first and then transition to background color
-        if isEnabled {
-            self.dimView.isHidden = !isEnabled
-        }
-
-        UIView.transition(
-            with: dimView,
-            duration: 0.25,
-            options: .transitionCrossDissolve
-        ) { [weak self] in
-            self?.dimView.backgroundColor =
-                isEnabled
-                ? .ypBackground
-                : .clear
-        } completion: { [weak self] _ in
-            // On disable: Transition to clear color and then hide
-            if !isEnabled {
-                self?.dimView.isHidden = !isEnabled
-            }
-        }
     }
 }
 
