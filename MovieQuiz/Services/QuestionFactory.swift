@@ -51,11 +51,12 @@ class QuestionFactory: QuestionFactoryProtocol {
             correctAnswer: false) // Настоящий рейтинг: 5,8
     ]
 
-    func requestNextQuestion() -> QuizQuestion? {
+    func requestNextQuestion(completion: (QuizQuestion?) -> Void) {
         guard let index = (0..<questions.count).randomElement() else {
-            return nil
+            completion(nil)
+            return
         }
 
-        return questions[safe: index]
+        completion(questions[safe: index])
     }
 }

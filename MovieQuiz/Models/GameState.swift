@@ -9,10 +9,10 @@ import Foundation
 
 struct GameState {
     let questionFactory: QuestionFactoryProtocol
-    
+
     var questionsAmount = 10
     var currentQuestion: QuizQuestion?
-    var currentQuestionNumber = 1
+    var currentQuestionNumber = 0
 
     var currentScore = 0
     var bestScore = 0

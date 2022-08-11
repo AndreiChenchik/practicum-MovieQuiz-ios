@@ -70,15 +70,25 @@ final class MovieQuizViewController: UIViewController {
 
 extension MovieQuizViewController {
     private func displayNextQuestion() {
-        state.currentQuestion = state.questionFactory.requestNextQuestion()
+        state.questionFactory.requestNextQuestion { [weak self] question in
+            guard
+                let self = self,
+                let question = question
+            else { return }
 
-        if let currentQuestion = state.currentQuestion {
+            self.state.currentQuestion = question
+            self.state.currentQuestionNumber += 1
+
+            let questionNumber = self.state.currentQuestionNumber
+            let questionsAmmount = self.state.questionsAmount
             let questionViewModel = convert(
-                from: currentQuestion,
-                with: "\(state.currentQuestionNumber)/\(state.questionsAmount)"
+                from: question,
+                with: "\(questionNumber)/\(questionsAmmount)"
             )
 
-            show(question: questionViewModel)
+            DispatchQueue.main.async {
+                self.show(question: questionViewModel)
+            }
         }
     }
 
@@ -103,9 +113,8 @@ extension MovieQuizViewController {
             show(result: resultsViewModel)
 
             state.currentScore = 0
-            state.currentQuestionNumber = 1
+            state.currentQuestionNumber = 0
         } else {
-            state.currentQuestionNumber += 1
             displayNextQuestion()
         }
     }
