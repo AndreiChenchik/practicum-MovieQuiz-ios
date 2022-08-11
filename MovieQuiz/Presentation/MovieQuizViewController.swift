@@ -21,9 +21,9 @@ final class MovieQuizViewController: UIViewController {
         displayQuestion()
     }
 
-    private func show(quize step: QuizeStepViewModel) {
-        textLabel.text = step.question
-        counterLabel.text = step.questionNumber
+    private func show(question model: QuizStepViewModel) {
+        textLabel.text = model.question
+        counterLabel.text = model.questionNumber
 
         UIView.animate(withDuration: 0.25) { [weak self] in
             self?.imageView.layer.borderWidth = 0
@@ -34,7 +34,7 @@ final class MovieQuizViewController: UIViewController {
             duration: 0.25,
             options: .transitionCrossDissolve
         ) { [weak self] in
-            self?.imageView.image = step.image
+            self?.imageView.image = model.image
         } completion: { [weak self] _ in
             guard let self = self else { return }
 
@@ -77,7 +77,7 @@ extension MovieQuizViewController {
             with: "\(state.currentQuestionNumber)/\(state.totalQuestions)"
         )
 
-        show(quize: questionViewModel)
+        show(question: questionViewModel)
     }
 
     private func processAnswer(answer: Bool) {
@@ -96,7 +96,7 @@ extension MovieQuizViewController {
             endGameSession()
 
             let resultsViewModel = convert(from: state)
-            show(quize: resultsViewModel)
+            show(result: resultsViewModel)
 
             state.currentScore = 0
             state.currentQuestionIndex = 0
@@ -138,17 +138,17 @@ extension MovieQuizViewController {
         }
     }
 
-    private func show(quize result: QuizeResultViewModel) {
+    private func show(result model: QuizResultViewModel) {
         let alert = ResultsAlertController(
-            title: result.title,
-            message: result.text,
+            title: model.title,
+            message: model.text,
             preferredStyle: .alert
         )
 
         alert.delegate = self
 
         let action = UIAlertAction(
-            title: result.buttonText,
+            title: model.buttonText,
             style: .default
         ) { _ in
             self.switchDimScreen(isEnabled: false)
@@ -189,14 +189,14 @@ extension MovieQuizViewController {
 // MARK: - Models
 
 extension MovieQuizViewController {
-    struct QuizeQuestion {
+    struct QuizQuestion {
         let image: String
         let text: String
         let correctAnswer: Bool
     }
 
     struct GameState {
-        var questions: [QuizeQuestion] = []
+        var questions: [QuizQuestion] = []
         var currentQuestionIndex: Int = 0
         var currentScore: Int = 0
 
@@ -207,17 +207,17 @@ extension MovieQuizViewController {
         var averageAnswerAccuracy: Double = 0.0
 
         var totalQuestions: Int { questions.count }
-        var currentQuestion: QuizeQuestion { questions[currentQuestionIndex] }
+        var currentQuestion: QuizQuestion { questions[currentQuestionIndex] }
         var currentQuestionNumber: Int { currentQuestionIndex + 1 }
     }
 
-    struct QuizeStepViewModel {
+    struct QuizStepViewModel {
         let image: UIImage
         let question: String
         let questionNumber: String
     }
 
-    struct QuizeResultViewModel {
+    struct QuizResultViewModel {
         let title: String
         let text: String
         let buttonText: String
@@ -229,14 +229,14 @@ extension MovieQuizViewController {
 
 extension MovieQuizViewController {
     private func convert(
-        from model: QuizeQuestion,
+        from model: QuizQuestion,
         with number: String
-    ) -> QuizeStepViewModel {
+    ) -> QuizStepViewModel {
         let image = UIImage(named: model.image) ?? .remove
         let question = model.text
         let questionNumber = number
 
-        let viewModel = QuizeStepViewModel(
+        let viewModel = QuizStepViewModel(
             image: image,
             question: question,
             questionNumber: questionNumber
@@ -245,7 +245,7 @@ extension MovieQuizViewController {
         return viewModel
     }
 
-    private func convert(from state: GameState) -> QuizeResultViewModel {
+    private func convert(from state: GameState) -> QuizResultViewModel {
         let isIdealSession = state.currentScore == state.questions.count
 
         let title =
@@ -268,7 +268,7 @@ extension MovieQuizViewController {
         Средняя точность: \(accuracy)%
         """
 
-        let viewModel = QuizeResultViewModel(
+        let viewModel = QuizResultViewModel(
             title: title,
             text: text,
             buttonText: buttonText
@@ -282,45 +282,45 @@ extension MovieQuizViewController {
 // MARK: - Mock Data
 
 extension MovieQuizViewController {
-    private func getQuestionsMock() -> [QuizeQuestion] {
+    private func getQuestionsMock() -> [QuizQuestion] {
         let data = [
-            QuizeQuestion(
+            QuizQuestion(
                 image: "The Godfather",
                 text: "Рейтинг этого фильма больше чем 6?",
                 correctAnswer: true), // Настоящий рейтинг: 9,2
-            QuizeQuestion(
+            QuizQuestion(
                 image: "The Dark Knight",
                 text: "Рейтинг этого фильма больше чем 6?",
                 correctAnswer: true), // Настоящий рейтинг: 9
-            QuizeQuestion(
+            QuizQuestion(
                 image: "Kill Bill",
                 text: "Рейтинг этого фильма больше чем 6?",
                 correctAnswer: true), // Настоящий рейтинг: 8,1
-            QuizeQuestion(
+            QuizQuestion(
                 image: "The Avengers",
                 text: "Рейтинг этого фильма больше чем 6?",
                 correctAnswer: true), // Настоящий рейтинг: 8
-            QuizeQuestion(
+            QuizQuestion(
                 image: "Deadpool",
                 text: "Рейтинг этого фильма больше чем 6?",
                 correctAnswer: true), // Настоящий рейтинг: 8
-            QuizeQuestion(
+            QuizQuestion(
                 image: "The Green Knight",
                 text: "Рейтинг этого фильма больше чем 6?",
                 correctAnswer: true), // Настоящий рейтинг: 6,6
-            QuizeQuestion(
+            QuizQuestion(
                 image: "Old",
                 text: "Рейтинг этого фильма больше чем 6?",
                 correctAnswer: false), // Настоящий рейтинг: 5,8
-            QuizeQuestion(
+            QuizQuestion(
                 image: "The Ice Age Adventures of Buck Wild",
                 text: "Рейтинг этого фильма больше чем 6?",
                 correctAnswer: false), // Настоящий рейтинг: 4,3
-            QuizeQuestion(
+            QuizQuestion(
                 image: "Tesla",
                 text: "Рейтинг этого фильма больше чем 6?",
                 correctAnswer: false), // Настоящий рейтинг: 5,1
-            QuizeQuestion(
+            QuizQuestion(
                 image: "Vivarium",
                 text: "Рейтинг этого фильма больше чем 6?",
                 correctAnswer: false) // Настоящий рейтинг: 5,8
