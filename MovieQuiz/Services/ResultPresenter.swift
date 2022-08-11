@@ -14,24 +14,24 @@ class ResultPresenter: ResultPresenterProtocol {
         over viewController: UIViewController,
         completion: @escaping () -> Void
     ) {
-        let alert = ResultAlertController(
+        let alertController = ResultAlertController(
             title: model.title,
             message: model.text,
             preferredStyle: .alert
         )
 
-        let dimViewController = DimViewController(dimmedViewController: alert)
+        let dimViewController = DimViewController(dimmedViewController: alertController)
 
         let action = UIAlertAction(
             title: model.buttonText,
             style: .default
-        ) { _ in
-            dimViewController.dismiss(animated: false)
+        ) { [weak dimViewController] _ in
+            dimViewController?.dismiss(animated: false)
             completion()
         }
 
-        alert.addAction(action)
-        alert.delegate = dimViewController
+        alertController.addAction(action)
+        alertController.delegate = dimViewController
 
         dimViewController.modalPresentationStyle = .overFullScreen
         viewController.present(dimViewController, animated: false)
