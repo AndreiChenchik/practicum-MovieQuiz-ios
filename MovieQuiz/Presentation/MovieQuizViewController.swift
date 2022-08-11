@@ -1,7 +1,7 @@
 import UIKit
 
 final class MovieQuizViewController: UIViewController {
-    private var state = GameState()
+    private var state = GameState(questionFactory: QuestionFactory())
 
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var textLabel: UILabel!
@@ -16,9 +16,7 @@ final class MovieQuizViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        state.questions = getQuestionsMock()
-        displayQuestion()
+        displayNextQuestion()
     }
 
     private func show(question model: QuizStepViewModel) {
@@ -71,17 +69,23 @@ final class MovieQuizViewController: UIViewController {
 // MARK: - Game logic
 
 extension MovieQuizViewController {
-    private func displayQuestion() {
-        let questionViewModel = convert(
-            from: state.currentQuestion,
-            with: "\(state.currentQuestionNumber)/\(state.totalQuestions)"
-        )
+    private func displayNextQuestion() {
+        state.currentQuestion = state.questionFactory.requestNextQuestion()
 
-        show(question: questionViewModel)
+        if let currentQuestion = state.currentQuestion {
+            let questionViewModel = convert(
+                from: currentQuestion,
+                with: "\(state.currentQuestionNumber)/\(state.questionsAmount)"
+            )
+
+            show(question: questionViewModel)
+        }
     }
 
     private func processAnswer(answer: Bool) {
-        let isCorrect = answer == state.currentQuestion.correctAnswer
+        guard let currentQuestion = state.currentQuestion else { return }
+
+        let isCorrect = answer == currentQuestion.correctAnswer
         state.currentScore += isCorrect ? 1 : 0
 
         showAnswerResult(isCorrect: isCorrect)
@@ -92,17 +96,17 @@ extension MovieQuizViewController {
     }
 
     private func showNextQuestionOrResults() {
-        if state.currentQuestionIndex >= state.totalQuestions - 1 {
+        if state.currentQuestionNumber >= state.questionsAmount {
             endGameSession()
 
             let resultsViewModel = convert(from: state)
             show(result: resultsViewModel)
 
             state.currentScore = 0
-            state.currentQuestionIndex = 0
+            state.currentQuestionNumber = 1
         } else {
-            state.currentQuestionIndex += 1
-            displayQuestion()
+            state.currentQuestionNumber += 1
+            displayNextQuestion()
         }
     }
 
@@ -110,7 +114,7 @@ extension MovieQuizViewController {
         let avgAccuracy = state.averageAnswerAccuracy
         let score = Double(state.currentScore)
         let totalGames = Double(state.totalGamesCount)
-        let totalQuestions = Double(state.totalQuestions)
+        let totalQuestions = Double(state.questionsAmount)
 
         state.averageAnswerAccuracy = (
             avgAccuracy * totalGames + score / totalQuestions
@@ -152,7 +156,7 @@ extension MovieQuizViewController {
             style: .default
         ) { _ in
             self.switchDimScreen(isEnabled: false)
-            self.displayQuestion()
+            self.displayNextQuestion()
         }
 
         alert.addAction(action)
@@ -207,8 +211,7 @@ extension MovieQuizViewController {
     }
 
     private func convert(from state: GameState) -> QuizResultViewModel {
-        let isIdealSession = state.currentScore == state.questions.count
-
+        let isIdealSession = state.currentScore == state.questionsAmount
         let title =
             isIdealSession
             ? "Идеальный результат!"
@@ -216,7 +219,7 @@ extension MovieQuizViewController {
 
         let buttonText = "Сыграть еще раз"
 
-        let totalQuestions = state.questions.count
+        let totalQuestions = state.questionsAmount
         let accuracy = String(format: "%.2f", state.averageAnswerAccuracy * 100)
 
         let bestGameDate = state.bestScoreDate.dateTimeString
@@ -236,58 +239,6 @@ extension MovieQuizViewController {
         )
 
         return viewModel
-    }
-}
-
-
-// MARK: - Mock Data
-
-extension MovieQuizViewController {
-    private func getQuestionsMock() -> [QuizQuestion] {
-        let data = [
-            QuizQuestion(
-                image: "The Godfather",
-                text: "Рейтинг этого фильма больше чем 6?",
-                correctAnswer: true), // Настоящий рейтинг: 9,2
-            QuizQuestion(
-                image: "The Dark Knight",
-                text: "Рейтинг этого фильма больше чем 6?",
-                correctAnswer: true), // Настоящий рейтинг: 9
-            QuizQuestion(
-                image: "Kill Bill",
-                text: "Рейтинг этого фильма больше чем 6?",
-                correctAnswer: true), // Настоящий рейтинг: 8,1
-            QuizQuestion(
-                image: "The Avengers",
-                text: "Рейтинг этого фильма больше чем 6?",
-                correctAnswer: true), // Настоящий рейтинг: 8
-            QuizQuestion(
-                image: "Deadpool",
-                text: "Рейтинг этого фильма больше чем 6?",
-                correctAnswer: true), // Настоящий рейтинг: 8
-            QuizQuestion(
-                image: "The Green Knight",
-                text: "Рейтинг этого фильма больше чем 6?",
-                correctAnswer: true), // Настоящий рейтинг: 6,6
-            QuizQuestion(
-                image: "Old",
-                text: "Рейтинг этого фильма больше чем 6?",
-                correctAnswer: false), // Настоящий рейтинг: 5,8
-            QuizQuestion(
-                image: "The Ice Age Adventures of Buck Wild",
-                text: "Рейтинг этого фильма больше чем 6?",
-                correctAnswer: false), // Настоящий рейтинг: 4,3
-            QuizQuestion(
-                image: "Tesla",
-                text: "Рейтинг этого фильма больше чем 6?",
-                correctAnswer: false), // Настоящий рейтинг: 5,1
-            QuizQuestion(
-                image: "Vivarium",
-                text: "Рейтинг этого фильма больше чем 6?",
-                correctAnswer: false) // Настоящий рейтинг: 5,8
-        ]
-
-        return data
     }
 }
 

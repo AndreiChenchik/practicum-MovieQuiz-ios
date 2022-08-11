@@ -8,17 +8,15 @@
 import Foundation
 
 struct GameState {
-    var questions: [QuizQuestion] = []
-    var currentQuestionIndex: Int = 0
-    var currentScore: Int = 0
+    let questionFactory: QuestionFactory
+    var questionsAmount = 10
+    var currentQuestion: QuizQuestion?
+    var currentQuestionNumber = 1
 
-    var bestScore: Int = 0
+    var currentScore = 0
+    var bestScore = 0
     var bestScoreDate: Date = .distantPast
 
-    var totalGamesCount: Int = 0
-    var averageAnswerAccuracy: Double = 0.0
-
-    var totalQuestions: Int { questions.count }
-    var currentQuestion: QuizQuestion { questions[currentQuestionIndex] }
-    var currentQuestionNumber: Int { currentQuestionIndex + 1 }
+    var totalGamesCount = 0
+    var averageAnswerAccuracy = 0.0
 }
