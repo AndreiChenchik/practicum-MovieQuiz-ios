@@ -186,39 +186,6 @@ extension MovieQuizViewController {
 }
 
 
-// MARK: - Models
-
-extension MovieQuizViewController {
-    struct GameState {
-        var questions: [QuizQuestion] = []
-        var currentQuestionIndex: Int = 0
-        var currentScore: Int = 0
-
-        var bestScore: Int = 0
-        var bestScoreDate: Date = .distantPast
-
-        var totalGamesCount: Int = 0
-        var averageAnswerAccuracy: Double = 0.0
-
-        var totalQuestions: Int { questions.count }
-        var currentQuestion: QuizQuestion { questions[currentQuestionIndex] }
-        var currentQuestionNumber: Int { currentQuestionIndex + 1 }
-    }
-
-    struct QuizStepViewModel {
-        let image: UIImage
-        let question: String
-        let questionNumber: String
-    }
-
-    struct QuizResultViewModel {
-        let title: String
-        let text: String
-        let buttonText: String
-    }
-}
-
-
 // MARK: - Data Converters
 
 extension MovieQuizViewController {
