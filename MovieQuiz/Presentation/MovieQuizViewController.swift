@@ -1,20 +1,43 @@
 import UIKit
 
-struct Actor {
-    let id: String
-    let image: String
-    let name: String
-    let asCharacter: String
+struct MoviesList: Codable {
+    let items: [Movie]
 }
-struct Movie {
+struct Movie: Codable {
     let id: String
+    let rank: Int
     let title: String
+    let fullTitle: String
     let year: Int
     let image: String
-    let releaseDate: String
-    let runtimeMins: Int
-    let directors: String
-    let actorList: [Actor]
+    let crew: String
+    let imDbRating: Double
+    let imDbRatingCount: Int
+
+    enum CodingKeys: String, CodingKey {
+       case id, rank, title, fullTitle, year, image, crew, imDbRating, imDbRatingCount
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        title = try container.decode(String.self, forKey: .title)
+        fullTitle = try container.decode(String.self, forKey: .fullTitle)
+        image = try container.decode(String.self, forKey: .image)
+        crew = try container.decode(String.self, forKey: .crew)
+
+        let rank = try container.decode(String.self, forKey: .rank)
+        self.rank = Int(rank)!
+
+        let year = try container.decode(String.self, forKey: .year)
+        self.year = Int(year)!
+
+        let imDbRating = try container.decode(String.self, forKey: .imDbRating)
+        self.imDbRating = Double(imDbRating)!
+
+        let imDbRatingCount = try container.decode(String.self, forKey: .imDbRatingCount)
+        self.imDbRatingCount = Int(imDbRatingCount)!
+    }
 }
 
 final class MovieQuizViewController: UIViewController {
@@ -36,30 +59,14 @@ final class MovieQuizViewController: UIViewController {
         let fileManager = FileManager.default
         var documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
 
-        let fileName = "inception.json"
+        let fileName = "top250MoviesIMDB.json"
         let fileUrl = documentsURL.appendingPathComponent(fileName)
 
-        if let data = fileManager.contents(atPath: fileUrl.path),
-            let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
-            let id = "?"
-            let title = json["title"] as! String
-            let releaseDate = json["releaseDate"] as! String
-            let year = Int(String(releaseDate.prefix(4)))!
-            let image = "?"
-            let runtimeMins = Int(json["runtimeMins"] as! String)!
-            let directors = json["directors"] as! String
-            let actorsList = json["actorList"] as! [[String: String]]
-            var actors = [Actor]()
-            for actorItem in actorsList {
-                let name = actorItem["name"]!
-                let asCharacter = actorItem["asCharacter"]!
-                let actor = Actor(
-                    id: id, image: image, name: name, asCharacter: asCharacter
-                )
-                actors.append(actor)
+        if let data = fileManager.contents(atPath: fileUrl.path) {
+           let moviesList = try! JSONDecoder().decode(MoviesList.self, from: data)
+            for movie in moviesList.items {
+                print(movie)
             }
-            let movie = Movie(id: id, title: title, year: year, image: image, releaseDate: releaseDate, runtimeMins: runtimeMins, directors: directors, actorList: actors)
-            print(movie)
         }
 
         state.questionFactory = QuestionFactory(delegate: self)
