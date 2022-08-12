@@ -15,4 +15,9 @@ class ResultAlertController: UIAlertController {
         delegate?.dimmedViewWillDisappear()
         super.viewWillDisappear(animated)
     }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        delegate?.dimmedViewDidDisappear()
+        super.viewDidDisappear(animated)
+    }
 }

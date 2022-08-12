@@ -25,15 +25,13 @@ class ResultPresenter: ResultPresenterProtocol {
         let action = UIAlertAction(
             title: model.buttonText,
             style: .default
-        ) { [weak dimViewController] _ in
-            dimViewController?.dismiss(animated: false)
+        ) { _ in
             completion()
         }
 
         alertController.addAction(action)
         alertController.delegate = dimViewController
 
-        dimViewController.modalPresentationStyle = .overFullScreen
         viewController.present(dimViewController, animated: false)
     }
 }

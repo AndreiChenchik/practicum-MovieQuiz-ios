@@ -9,4 +9,5 @@ import Foundation
 
 protocol DimmedViewControllerDelegate: AnyObject {
     func dimmedViewWillDisappear()
+    func dimmedViewDidDisappear()
 }

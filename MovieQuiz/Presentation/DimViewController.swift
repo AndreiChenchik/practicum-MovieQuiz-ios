@@ -11,6 +11,11 @@ class DimViewController: UIViewController {
     private let dimView = UIView()
     private let dimmedViewController: UIViewController
 
+    override var modalPresentationStyle: UIModalPresentationStyle {
+        get { .overFullScreen }
+        set {}
+    }
+
     init(dimmedViewController: UIAlertController) {
         self.dimmedViewController = dimmedViewController
 
@@ -23,7 +28,6 @@ class DimViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         configureDimView()
     }
 
@@ -69,5 +73,9 @@ class DimViewController: UIViewController {
 extension DimViewController: DimmedViewControllerDelegate {
     func dimmedViewWillDisappear() {
         switchDimScreen(isEnabled: false)
+    }
+
+    func dimmedViewDidDisappear() {
+        dismiss(animated: false)
     }
 }
