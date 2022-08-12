@@ -1,5 +1,22 @@
 import UIKit
 
+struct Actor {
+    let id: String
+    let image: String
+    let name: String
+    let asCharacter: String
+}
+struct Movie {
+    let id: String
+    let title: String
+    let year: Int
+    let image: String
+    let releaseDate: String
+    let runtimeMins: Int
+    let directors: String
+    let actorList: [Actor]
+}
+
 final class MovieQuizViewController: UIViewController {
     private var state = GameState()
     private var resultPresenter = ResultPresenter()
@@ -15,6 +32,35 @@ final class MovieQuizViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        let fileManager = FileManager.default
+        var documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
+
+        let fileName = "inception.json"
+        let fileUrl = documentsURL.appendingPathComponent(fileName)
+
+        if let data = fileManager.contents(atPath: fileUrl.path),
+            let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
+            let id = "?"
+            let title = json["title"] as! String
+            let releaseDate = json["releaseDate"] as! String
+            let year = Int(String(releaseDate.prefix(4)))!
+            let image = "?"
+            let runtimeMins = Int(json["runtimeMins"] as! String)!
+            let directors = json["directors"] as! String
+            let actorsList = json["actorList"] as! [[String: String]]
+            var actors = [Actor]()
+            for actorItem in actorsList {
+                let name = actorItem["name"]!
+                let asCharacter = actorItem["asCharacter"]!
+                let actor = Actor(
+                    id: id, image: image, name: name, asCharacter: asCharacter
+                )
+                actors.append(actor)
+            }
+            let movie = Movie(id: id, title: title, year: year, image: image, releaseDate: releaseDate, runtimeMins: runtimeMins, directors: directors, actorList: actors)
+            print(movie)
+        }
 
         state.questionFactory = QuestionFactory(delegate: self)
         state.questionFactory?.requestNextQuestion()
