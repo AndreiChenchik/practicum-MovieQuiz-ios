@@ -42,7 +42,7 @@ final class MovieQuizViewController: UIViewController {
         }
     }
 
-    private func showAnswerResult(isCorrect: Bool) {
+    private func show(isAnswerCorrect: Bool) {
         yesButton.isEnabled = false
         noButton.isEnabled = false
 
@@ -51,7 +51,7 @@ final class MovieQuizViewController: UIViewController {
 
             self.imageView.layer.borderWidth = 8
             self.imageView.layer.borderColor =
-            isCorrect
+            isAnswerCorrect
             ? UIColor.ypGreen.cgColor
             : UIColor.ypRed.cgColor
         }
@@ -99,7 +99,7 @@ extension MovieQuizViewController {
         let isCorrect = answer == currentQuestion.correctAnswer
         state.currentScore += isCorrect ? 1 : 0
 
-        showAnswerResult(isCorrect: isCorrect)
+        show(isAnswerCorrect: isCorrect)
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
             self.showNextQuestionOrResults()
