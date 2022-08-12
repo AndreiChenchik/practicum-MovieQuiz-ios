@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class ResultPresenter: ResultPresenterProtocol {
+final class ResultPresenter: ResultPresenterProtocol {
     func displayResults(
         _ model: QuizResultViewModel,
         over viewController: UIViewController,
