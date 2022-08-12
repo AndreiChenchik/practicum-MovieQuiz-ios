@@ -2,7 +2,10 @@ import UIKit
 
 final class MovieQuizViewController: UIViewController {
     private var state = GameState()
-    private var resultPresenter = ResultPresenter()
+
+    private var questionFactory: QuestionFactoryProtocol?
+    private var resultPresenter: ResultPresenterProtocol?
+    private var statisticService: StatisticsService?
 
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var textLabel: UILabel!
@@ -16,9 +19,11 @@ final class MovieQuizViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        questionFactory = QuestionFactory(delegate: self)
+        statisticService = StatisticServiceImplementation()
+        resultPresenter = ResultPresenter()
 
-        state.questionFactory = QuestionFactory(delegate: self)
-        state.questionFactory?.requestNextQuestion()
+        questionFactory?.requestNextQuestion()
     }
 
     private func show(question model: QuizStepViewModel) {
@@ -109,40 +114,24 @@ extension MovieQuizViewController {
 
     private func showNextQuestionOrResults() {
         if state.currentQuestionNumber >= state.questionsAmount {
-            endGameSession()
+            statisticService?.store(
+                correct: state.currentScore, total: state.questionsAmount
+            )
 
             let resultsViewModel = convert(from: state)
 
-            resultPresenter.displayResults(
+            resultPresenter?.displayResults(
                 resultsViewModel,
                 over: self
             ) { [weak self] in
-                self?.state.questionFactory?.requestNextQuestion()
+                self?.questionFactory?.requestNextQuestion()
             }
 
             state.currentScore = 0
             state.currentQuestionNumber = 0
         } else {
-            state.questionFactory?.requestNextQuestion()
+            questionFactory?.requestNextQuestion()
         }
-    }
-
-    private func endGameSession() {
-        let avgAccuracy = state.averageAnswerAccuracy
-        let score = Double(state.currentScore)
-        let totalGames = Double(state.totalGamesCount)
-        let totalQuestions = Double(state.questionsAmount)
-
-        state.averageAnswerAccuracy = (
-            avgAccuracy * totalGames + score / totalQuestions
-        ) / (totalGames + 1)
-
-        if state.currentScore > state.bestScore {
-            state.bestScore = state.currentScore
-            state.bestScoreDate = Date()
-        }
-
-        state.totalGamesCount += 1
     }
 }
 
@@ -177,16 +166,21 @@ extension MovieQuizViewController {
         let buttonText = "Сыграть еще раз"
 
         let totalQuestions = state.questionsAmount
-        let accuracy = String(format: "%.2f", state.averageAnswerAccuracy * 100)
 
-        let bestGameDate = state.bestScoreDate.dateTimeString
-        let bestGame = "\(state.bestScore)/\(totalQuestions) (\(bestGameDate))"
+        let totalAccuracy = statisticService?.totalAccuracy ?? 0.0
+        let accuracyDescription = String(format: "%.2f", totalAccuracy * 100)
+
+        let bestDate = statisticService?.bestGame.date ?? Date()
+        let bestDateDescription = bestDate.dateTimeString
+        let bestScore = statisticService?.bestGame.correct ?? 0
+        let bestTotalQuestions = statisticService?.bestGame.total ?? 0
+        let totalGames = statisticService?.gamesCount ?? 0
 
         let text = """
         Ваш результат: \(state.currentScore)/\(totalQuestions)
-        Количество сыграных квизов: \(state.totalGamesCount)
-        Рекорд: \(bestGame)
-        Средняя точность: \(accuracy)%
+        Количество сыграных квизов: \(totalGames)
+        Рекорд: \(bestScore)/\(bestTotalQuestions) (\(bestDateDescription))
+        Средняя точность: \(accuracyDescription)%
         """
 
         let viewModel = QuizResultViewModel(
