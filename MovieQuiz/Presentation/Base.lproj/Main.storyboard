@@ -45,7 +45,7 @@
                                             </label>
                                         </subviews>
                                     </stackView>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" verticalCompressionResistancePriority="749" image="The Green Knight" translatesAutoresizingMaskIntoConstraints="NO" id="EjF-mK-EnV" userLabel="Preview Image">
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" verticalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="EjF-mK-EnV" userLabel="Preview Image">
                                         <rect key="frame" x="0.0" y="43.5" width="374" height="540.5"/>
                                         <constraints>
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" secondItem="EjF-mK-EnV" secondAttribute="height" multiplier="2:3" id="FW9-td-04R"/>
@@ -59,8 +59,8 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JJy-RA-Phn">
                                         <rect key="frame" x="0.0" y="604" width="374" height="120"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Рейтинг этого фильма меньше чем 5? Рейтинг этого фильма меньше чем 5? Рейтинг этого фильма меньше чем 5? " textAlignment="center" lineBreakMode="clip" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="16" translatesAutoresizingMaskIntoConstraints="NO" id="HQc-RI-JES" userLabel="Question Label">
-                                                <rect key="frame" x="43" y="13" width="288" height="94"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="..." textAlignment="center" lineBreakMode="clip" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="16" translatesAutoresizingMaskIntoConstraints="NO" id="HQc-RI-JES" userLabel="Question Label">
+                                                <rect key="frame" x="179" y="13" width="16.5" height="94"/>
                                                 <fontDescription key="fontDescription" name="YSDisplay-Bold" family="YS Display" pointSize="23"/>
                                                 <color key="textColor" name="YP White"/>
                                                 <nil key="highlightedColor"/>
@@ -144,7 +144,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="The Green Knight" width="1382" height="2048"/>
         <namedColor name="YP Black">
             <color red="0.10199999809265137" green="0.10599999874830246" blue="0.13300000131130219" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
