@@ -9,6 +9,7 @@ import Foundation
 
 class QuestionFactory: QuestionFactoryProtocol {
     private let moviesLoader: MoviesLoading
+    private let postersLoader: PostersLoading
     private weak var delegate: QuestionFactoryDelegate?
 
     private var movies: [MostPopularMovie] = []
@@ -56,8 +57,13 @@ class QuestionFactory: QuestionFactoryProtocol {
 //            correctAnswer: false) // Настоящий рейтинг: 5,8
 //    ]
 
-    init(moviesLoader: MoviesLoading, delegate: QuestionFactoryDelegate) {
+    init(
+        moviesLoader: MoviesLoading,
+        postersLoader: PostersLoading,
+        delegate: QuestionFactoryDelegate
+    ) {
         self.moviesLoader = moviesLoader
+        self.postersLoader = postersLoader
         self.delegate = delegate
     }
 
@@ -76,31 +82,33 @@ class QuestionFactory: QuestionFactoryProtocol {
 
     func requestNextQuestion() {
         DispatchQueue.global().async { [weak self] in
-            guard let self = self else { return }
-            let index = Int.random(in: 0..<self.movies.count)
+            guard
+                let self = self,
+                let movie = self.movies.randomElement()
+            else { return }
 
-            guard let movie = self.movies[safe: index] else { return }
+            self.postersLoader.loadRandomPoster(movieId: movie.id) { result in
+                switch result {
+                case .success(let imageData):
+                    let rating = Float(movie.rating) ?? 0
 
-            var imageData = Data()
+                    let text = "Рейтинг этого фильма больше чем 7?"
+                    let correctAnswer = rating > 7
 
-            do {
-                imageData = try Data(contentsOf: movie.imageURL)
-            } catch {
-                print("Failed to load image")
-            }
+                    let question = QuizQuestion(
+                        image: imageData, text: text, correctAnswer: correctAnswer
+                    )
 
-            let rating = Float(movie.rating) ?? 0
-
-            let text = "Рейтинг этого фильма больше чем 7?"
-            let correctAnswer = rating > 7
-
-            let question = QuizQuestion(
-                image: imageData, text: text, correctAnswer: correctAnswer
-            )
-
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                self.delegate?.didRecieveNextQuestion(question: question)
+                    DispatchQueue.main.async { [weak self] in
+                        guard let self = self else { return }
+                        self.delegate?.didRecieveNextQuestion(question: question)
+                    }
+                case .failure(let error):
+                    DispatchQueue.main.async { [weak self] in
+                        guard let self = self else { return }
+                        self.delegate?.didFailToLoadData(with: error)
+                    }
+                }
             }
         }
     }

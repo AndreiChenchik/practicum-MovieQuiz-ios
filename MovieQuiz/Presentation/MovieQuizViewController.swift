@@ -29,11 +29,17 @@ final class MovieQuizViewController: UIViewController {
         configureActivityIndicator()
 
         questionFactory = QuestionFactory(
-            moviesLoader: MoviesLoader(), delegate: self
+            moviesLoader: MoviesLoader(),
+            postersLoader: PostersLoader(),
+            delegate: self
         )
         statisticService = StatisticServiceImplementation()
         resultPresenter = ResultPresenter()
 
+        loadData()
+    }
+
+    private func loadData() {
         showLoadingIndicator()
         questionFactory?.loadData()
     }
@@ -64,8 +70,8 @@ final class MovieQuizViewController: UIViewController {
         let alertAction = UIAlertAction(
             title: "Try again",
             style: .default
-        ) { _ in
-            print("Button pressed")
+        ) { [weak self] _ in
+            self?.loadData()
         }
 
         alertController.addAction(alertAction)
@@ -124,8 +130,6 @@ final class MovieQuizViewController: UIViewController {
 
 extension MovieQuizViewController: QuestionFactoryDelegate {
     func didLoadDataFromServer() {
-        activityIndicator.isHidden = true
-
         questionFactory?.requestNextQuestion()
     }
 
@@ -147,6 +151,7 @@ extension MovieQuizViewController: QuestionFactoryDelegate {
         )
 
         DispatchQueue.main.async {
+            self.activityIndicator.isHidden = true
             self.show(question: questionViewModel)
         }
     }
@@ -187,6 +192,7 @@ extension MovieQuizViewController {
             state.currentScore = 0
             state.currentQuestionNumber = 0
         } else {
+            self.showLoadingIndicator()
             questionFactory?.requestNextQuestion()
         }
     }
