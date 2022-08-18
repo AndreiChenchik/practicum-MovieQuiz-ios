@@ -14,16 +14,63 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private weak var yesButton: UIButton!
     @IBOutlet private weak var noButton: UIButton!
 
+    private var activityIndicator = {
+        let indicator = UIActivityIndicatorView()
+        indicator.isHidden = true
+
+        return indicator
+    }()
+
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        questionFactory = QuestionFactory(delegate: self)
+        configureActivityIndicator()
+
+        questionFactory = QuestionFactory(
+            moviesLoader: MoviesLoader(), delegate: self
+        )
         statisticService = StatisticServiceImplementation()
         resultPresenter = ResultPresenter()
 
-        questionFactory?.requestNextQuestion()
+        showLoadingIndicator()
+        questionFactory?.loadData()
+    }
+
+    private func configureActivityIndicator() {
+        view.addSubview(activityIndicator)
+
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
+        ])
+    }
+
+    private func showLoadingIndicator() {
+        activityIndicator.isHidden = false
+        activityIndicator.startAnimating()
+    }
+
+    private func showNetworkError(message: String) {
+        activityIndicator.isHidden = true
+
+        let alertController = UIAlertController(
+            title: "Error", message: message, preferredStyle: .alert
+        )
+
+        let alertAction = UIAlertAction(
+            title: "Try again",
+            style: .default
+        ) { _ in
+            print("Button pressed")
+        }
+
+        alertController.addAction(alertAction)
+
+        present(alertController, animated: true)
     }
 
     private func show(question model: QuizStepViewModel) {
@@ -76,6 +123,16 @@ final class MovieQuizViewController: UIViewController {
 // MARK: - QuestionFactoryDelegate
 
 extension MovieQuizViewController: QuestionFactoryDelegate {
+    func didLoadDataFromServer() {
+        activityIndicator.isHidden = true
+
+        questionFactory?.requestNextQuestion()
+    }
+
+    func didFailToLoadData(with error: Error) {
+        showNetworkError(message: error.localizedDescription)
+    }
+
     func didRecieveNextQuestion(question: QuizQuestion?) {
         guard let question = question else { return }
 
@@ -143,7 +200,7 @@ extension MovieQuizViewController {
         from model: QuizQuestion,
         with number: String
     ) -> QuizStepViewModel {
-        let image = UIImage(named: model.image) ?? .remove
+        let image = UIImage(data: model.image) ?? .remove
         let question = model.text
         let questionNumber = number
 
