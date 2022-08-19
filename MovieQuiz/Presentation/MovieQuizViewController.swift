@@ -14,12 +14,7 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private weak var yesButton: UIButton!
     @IBOutlet private weak var noButton: UIButton!
 
-    private var activityIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView()
-        indicator.isHidden = true
-
-        return indicator
-    }()
+    private var activityIndicator = UIActivityIndicatorView()
 
     // MARK: - Lifecycle
 
@@ -40,7 +35,7 @@ final class MovieQuizViewController: UIViewController {
     }
 
     private func loadData() {
-        showLoadingIndicator()
+        activityIndicator.startAnimating()
         questionFactory?.loadData()
     }
 
@@ -55,13 +50,8 @@ final class MovieQuizViewController: UIViewController {
         ])
     }
 
-    private func showLoadingIndicator() {
-        activityIndicator.isHidden = false
-        activityIndicator.startAnimating()
-    }
-
     private func showNetworkError(message: String) {
-        activityIndicator.isHidden = true
+        activityIndicator.stopAnimating()
 
         let alertController = UIAlertController(
             title: "Error", message: message, preferredStyle: .alert
@@ -153,7 +143,7 @@ extension MovieQuizViewController: QuestionFactoryDelegate {
         )
 
         DispatchQueue.main.async {
-            self.activityIndicator.isHidden = true
+            self.activityIndicator.stopAnimating()
             self.show(question: questionViewModel)
         }
     }
@@ -194,7 +184,7 @@ extension MovieQuizViewController {
             state.currentScore = 0
             state.currentQuestionNumber = 0
         } else {
-            self.showLoadingIndicator()
+            activityIndicator.startAnimating()
             questionFactory?.requestNextQuestion()
         }
     }
