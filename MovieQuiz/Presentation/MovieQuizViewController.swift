@@ -139,17 +139,17 @@ extension MovieQuizViewController: QuestionFactoryDelegate {
         }
     }
 
-    func didRecieveNextQuestion(question: QuizQuestion?) {
+    func didReceiveNextQuestion(question: QuizQuestion?) {
         guard let question = question else { return }
 
         self.state.currentQuestion = question
         self.state.currentQuestionNumber += 1
 
         let questionNumber = self.state.currentQuestionNumber
-        let questionsAmmount = self.state.questionsAmount
+        let questionsAmount = self.state.questionsAmount
         let questionViewModel = convert(
             from: question,
-            with: "\(questionNumber)/\(questionsAmmount)"
+            with: "\(questionNumber)/\(questionsAmount)"
         )
 
         DispatchQueue.main.async {

@@ -15,7 +15,7 @@ extension ApiError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .genericError(let message):
-            return NSLocalizedString(message, comment: "Programmic error")
+            return NSLocalizedString(message, comment: "API generic error")
         }
     }
 }
