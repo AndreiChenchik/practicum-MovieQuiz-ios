@@ -134,7 +134,9 @@ extension MovieQuizViewController: QuestionFactoryDelegate {
     }
 
     func didFailToLoadData(with error: Error) {
-        showNetworkError(message: error.localizedDescription)
+        DispatchQueue.main.async { [weak self] in
+            self?.showNetworkError(message: error.localizedDescription)
+        }
     }
 
     func didRecieveNextQuestion(question: QuizQuestion?) {
