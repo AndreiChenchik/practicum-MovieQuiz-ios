@@ -28,8 +28,11 @@ final class MovieQuizViewController: UIViewController {
             postersLoader: PostersLoader(),
             delegate: self
         )
-        statisticService = StatisticServiceImplementation()
-        resultPresenter = ResultPresenter()
+
+        let statisticService = StatisticServiceImplementation()
+        self.statisticService = statisticService
+
+        resultPresenter = ResultPresenter(statisticService: statisticService)
 
         loadData()
     }
@@ -172,10 +175,8 @@ extension MovieQuizViewController {
                 correct: state.currentScore, total: state.questionsAmount
             )
 
-            let resultsViewModel = convert(from: state)
-
             resultPresenter?.displayResults(
-                resultsViewModel,
+                from: state,
                 over: self
             ) { [weak self] in
                 self?.questionFactory?.requestNextQuestion()
@@ -206,42 +207,6 @@ extension MovieQuizViewController {
             image: image,
             question: question,
             questionNumber: questionNumber
-        )
-
-        return viewModel
-    }
-
-    private func convert(from state: GameState) -> QuizResultViewModel {
-        let isIdealSession = state.currentScore == state.questionsAmount
-        let title =
-            isIdealSession
-            ? "Идеальный результат!"
-            : "Этот раунд окончен!"
-
-        let buttonText = "Сыграть еще раз"
-
-        let totalQuestions = state.questionsAmount
-
-        let totalAccuracy = statisticService?.totalAccuracy ?? 0.0
-        let accuracyDescription = String(format: "%.2f", totalAccuracy * 100)
-
-        let bestDate = statisticService?.bestGame.date ?? Date()
-        let bestDateDescription = bestDate.dateTimeString
-        let bestScore = statisticService?.bestGame.correct ?? 0
-        let bestTotalQuestions = statisticService?.bestGame.total ?? 0
-        let totalGames = statisticService?.gamesCount ?? 0
-
-        let text = """
-        Ваш результат: \(state.currentScore)/\(totalQuestions)
-        Количество сыграных квизов: \(totalGames)
-        Рекорд: \(bestScore)/\(bestTotalQuestions) (\(bestDateDescription))
-        Средняя точность: \(accuracyDescription)%
-        """
-
-        let viewModel = QuizResultViewModel(
-            title: title,
-            text: text,
-            buttonText: buttonText
         )
 
         return viewModel

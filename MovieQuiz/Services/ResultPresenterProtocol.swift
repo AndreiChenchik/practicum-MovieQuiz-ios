@@ -10,7 +10,7 @@ import UIKit
 
 protocol ResultPresenterProtocol {
     func displayResults(
-        _ model: QuizResultViewModel,
+        from state: GameState,
         over viewController: UIViewController,
         completion: @escaping () -> Void
     )
