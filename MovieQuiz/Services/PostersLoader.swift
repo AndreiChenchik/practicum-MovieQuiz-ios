@@ -49,10 +49,7 @@ struct PostersLoader: PostersLoading {
                     )
 
                     if !apiResponse.error.isEmpty {
-                        handler(
-                            .failure(ApiError.genericError(apiResponse.error))
-                        )
-                        return
+                        throw ApiError.genericError(message: apiResponse.error)
                     }
 
                     let moviePosters = try JSONDecoder().decode(

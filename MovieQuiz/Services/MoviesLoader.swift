@@ -20,7 +20,7 @@ struct MoviesLoader: MoviesLoading {
     // MARK: - URL
     private var mostPopularMoviesUrl: URL {
         guard let url = URL(
-            string: "https://imdb-api.com/en/API/MostPopularMovies/k_kiwxbi4y"
+            string: "https://imdb-api.com/en/API/MostPopularMovies/k_kiwxbi4yy"
         ) else {
             preconditionFailure("Unable to construct mostPopularMoviesUrl")
         }
@@ -41,10 +41,7 @@ struct MoviesLoader: MoviesLoading {
                     )
 
                     if !apiResponse.error.isEmpty {
-                        handler(
-                            .failure(ApiError.genericError(apiResponse.error))
-                        )
-                        return
+                        throw ApiError.genericError(message: apiResponse.error)
                     }
 
                     let mostPopularMovies = try JSONDecoder().decode(
