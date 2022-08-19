@@ -44,6 +44,17 @@ struct PostersLoader: PostersLoading {
             switch result {
             case .success(let data):
                 do {
+                    let apiResponse = try JSONDecoder().decode(
+                        ApiResponse.self, from: data
+                    )
+
+                    if !apiResponse.error.isEmpty {
+                        handler(
+                            .failure(ApiError.genericError(apiResponse.error))
+                        )
+                        return
+                    }
+
                     let moviePosters = try JSONDecoder().decode(
                         MoviePosters.self, from: data
                     )
