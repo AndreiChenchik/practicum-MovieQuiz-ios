@@ -9,7 +9,7 @@ import XCTest
 
 final class MovieQuizUITests: XCTestCase {
     let imageLoadSleep: UInt32 = 1
-    let questionSwitchSleep: UInt32 = 1
+    let questionSwitchSleep: UInt32 = 2
 
     // swiftlint:disable:next implicitly_unwrapped_optional
     var app: XCUIApplication!
