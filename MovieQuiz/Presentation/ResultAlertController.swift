@@ -7,7 +7,6 @@
 
 import UIKit
 
-
 class ResultAlertController: UIAlertController {
     weak var delegate: DimmedViewControllerDelegate?
 
