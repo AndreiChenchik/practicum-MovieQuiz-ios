@@ -105,8 +105,8 @@ final class MovieQuizViewController: UIViewController {
             self.imageView.layer.borderWidth = 8
             self.imageView.layer.borderColor =
             isAnswerCorrect
-            ? UIColor.getCustom(.ypGreen).cgColor
-            : UIColor.getCustom(.ypRed).cgColor
+            ? UIColor(colorAsset: .ypGreen).cgColor
+            : UIColor(colorAsset: .ypRed).cgColor
         }
     }
 

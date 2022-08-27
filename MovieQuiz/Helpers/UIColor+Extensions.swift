@@ -11,11 +11,8 @@ extension UIColor {
         case ypBackground = "YP Background"
     }
 
-    static func getCustom(_ colorAsset: CustomColorAsset) -> UIColor {
-        guard let color = UIColor(named: colorAsset.rawValue) else {
-            return .clear
-        }
-
-        return color
+    convenience init(colorAsset: CustomColorAsset) {
+        let color = UIColor(named: colorAsset.rawValue) ?? .clear
+        self.init(cgColor: color.cgColor)
     }
 }

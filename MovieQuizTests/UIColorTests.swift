@@ -15,7 +15,7 @@ final class UIColorTests: XCTestCase {
 
         for asset in assetNames {
             // When
-            let color = UIColor.getCustom(asset)
+            let color = UIColor(colorAsset: asset)
 
             // Then
             XCTAssertNotEqual(

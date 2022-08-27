@@ -61,7 +61,7 @@ class DimViewController: UIViewController {
         ) { [weak self] in
             self?.dimView.backgroundColor =
             isEnabled
-            ? .getCustom(.ypBackground)
+            ? .init(colorAsset: .ypBackground)
             : .clear
         }
     }
