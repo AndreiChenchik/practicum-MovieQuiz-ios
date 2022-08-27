@@ -13,8 +13,8 @@ final class UIColorTests: XCTestCase {
         // Given
         let assetNames = UIColor.CustomColorAsset.allCases
 
+        // When
         for asset in assetNames {
-            // When
             let color = UIColor(colorAsset: asset)
 
             // Then
