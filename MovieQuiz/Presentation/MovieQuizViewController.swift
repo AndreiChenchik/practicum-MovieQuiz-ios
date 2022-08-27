@@ -26,7 +26,7 @@ final class MovieQuizViewController: UIViewController {
         let networkClient = NetworkClient()
         questionFactory = QuestionFactory(
             moviesLoader: MoviesLoader(networkClient: networkClient),
-            postersLoader: PostersLoader(),
+            postersLoader: PostersLoader(networkClient: networkClient),
             delegate: self
         )
 

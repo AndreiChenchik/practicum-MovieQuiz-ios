@@ -19,26 +19,18 @@ struct PostersLoader: PostersLoading {
         case imageError
     }
 
-    // MARK: - NetworkClient
-    private let networkClient = NetworkClient()
+    private let networkClient: NetworkRouting
 
-    // MARK: - URL
-    private var moviePostersBaseUrl: URL {
-        guard let url = URL(
-            string: "https://imdb-api.com/en/API/Posters/k_kiwxbi4y"
-        ) else {
-            preconditionFailure("Unable to construct moviePostersUrl")
-        }
-
-        return url
+    init(networkClient: NetworkRouting) {
+        self.networkClient = networkClient
     }
-
 
     func loadRandomPoster(
         movieId: String,
         handler: @escaping (Result<Data, Error>) -> Void
     ) {
-        let url = moviePostersBaseUrl.appendingPathComponent("/\(movieId)")
+        let url = URL.imdbUrl(.moviePostersBase)
+            .appendingPathComponent("/\(movieId)")
 
         networkClient.fetch(url: url) { result in
             switch result {
