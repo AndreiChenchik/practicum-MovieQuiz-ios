@@ -11,12 +11,18 @@ import XCTest
 final class UIColorTests: XCTestCase {
     func testAllColorAssets() throws {
         // Given
-        let colors = UIColor.CustomColorAssets.allCases
+        let assetNames = UIColor.CustomColorAsset.allCases
 
-        // When
-        for color in colors {
+        for asset in assetNames {
+            // When
+            let color = UIColor.getCustom(asset)
+
             // Then
-            XCTAssertNoThrow(UIColor.getCustom(color))
+            XCTAssertNotEqual(
+                color,
+                UIColor.clear,
+                "Color Asset with name '\(asset.rawValue)' should be present"
+            )
         }
     }
 }
