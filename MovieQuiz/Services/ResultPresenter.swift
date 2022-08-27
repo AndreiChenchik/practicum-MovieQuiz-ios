@@ -8,7 +8,15 @@
 import Foundation
 import UIKit
 
-final class ResultPresenter: ResultPresenterProtocol {
+protocol ResultPresenting {
+    func displayResults(
+        from state: GameState,
+        over viewController: UIViewController,
+        completion: @escaping () -> Void
+    )
+}
+
+final class ResultPresenter: ResultPresenting {
     let statisticService: StatisticsService
 
     init(statisticService: StatisticsService) {

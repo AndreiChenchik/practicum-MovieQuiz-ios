@@ -15,7 +15,7 @@ protocol StatisticsService {
     func store(correct count: Int, total amount: Int)
 }
 
-final class StatisticServiceImplementation: StatisticsService {
+final class StatisticServiceImpl: StatisticsService {
     private let userDefaults = UserDefaults.standard
 
     private enum Keys: String {

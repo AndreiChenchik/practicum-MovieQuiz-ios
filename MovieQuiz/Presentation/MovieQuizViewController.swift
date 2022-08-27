@@ -4,7 +4,7 @@ final class MovieQuizViewController: UIViewController {
     private var state = GameState()
 
     private var questionFactory: QuestionFactoryProtocol?
-    private var resultPresenter: ResultPresenterProtocol?
+    private var resultPresenter: ResultPresenting?
     private var statisticService: StatisticsService?
 
     @IBOutlet private weak var imageView: UIImageView!
@@ -30,7 +30,7 @@ final class MovieQuizViewController: UIViewController {
             delegate: self
         )
 
-        let statisticService = StatisticServiceImplementation()
+        let statisticService = StatisticServiceImpl()
         self.statisticService = statisticService
 
         resultPresenter = ResultPresenter(statisticService: statisticService)

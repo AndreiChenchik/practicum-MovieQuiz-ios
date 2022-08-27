@@ -7,6 +7,17 @@
 
 import Foundation
 
+protocol QuestionFactoryProtocol {
+    func loadData()
+    func requestNextQuestion()
+}
+
+protocol QuestionFactoryDelegate: AnyObject {
+    func didReceiveNextQuestion(question: QuizQuestion?)
+    func didLoadDataFromServer()
+    func didFailToLoadData(with error: Error)
+}
+
 class QuestionFactory: QuestionFactoryProtocol {
     private let moviesLoader: MoviesLoading
     private let postersLoader: PostersLoading
