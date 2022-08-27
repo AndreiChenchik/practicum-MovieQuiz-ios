@@ -23,7 +23,8 @@ final class MovieQuizViewController: UIViewController {
 
         configureActivityIndicator()
 
-        let networkClient = NetworkClient()
+        let urlSession = URLSession.shared
+        let networkClient = NetworkClient(urlSession: urlSession)
         questionFactory = QuestionFactory(
             moviesLoader: MoviesLoader(networkClient: networkClient),
             postersLoader: PostersLoader(networkClient: networkClient),

@@ -11,6 +11,12 @@ protocol NetworkRouting {
 }
 
 struct NetworkClient: NetworkRouting {
+    private let urlSession: URLSession
+
+    init(urlSession: URLSession) {
+        self.urlSession = urlSession
+    }
+
     private enum NetworkError: Error {
         case codeError
     }
@@ -18,7 +24,7 @@ struct NetworkClient: NetworkRouting {
     func fetch(url: URL, handler: @escaping (Result<Data, Error>) -> Void) {
         let request = URLRequest(url: url)
 
-        let task = URLSession.shared.dataTask(
+        let task = urlSession.dataTask(
             with: request
         ) { data, response, error in
             if let error = error {
