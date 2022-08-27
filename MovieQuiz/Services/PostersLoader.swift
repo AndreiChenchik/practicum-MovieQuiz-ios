@@ -29,28 +29,19 @@ struct PostersLoader: PostersLoading {
         movieId: String,
         handler: @escaping (Result<Data, Error>) -> Void
     ) {
-        let url = URL.imdbUrl(.moviePostersBase)
-            .appendingPathComponent("/\(movieId)")
+        let url = URL.tmdbUrl(.imdbMovieSearch(movieId: movieId))
 
         networkClient.fetch(url: url) { result in
             switch result {
             case .success(let data):
                 do {
-                    let apiResponse = try JSONDecoder().decode(
-                        ApiResponse.self, from: data
+                    let searchResponse = try JSONDecoder().decode(
+                        MovieSearchResponse.self, from: data
                     )
 
-                    if !apiResponse.error.isEmpty {
-                        throw ApiError.genericError(message: apiResponse.error)
-                    }
-
-                    let moviePosters = try JSONDecoder().decode(
-                        MoviePosters.self, from: data
-                    )
-
-                    if let randomPoster = moviePosters.posters.randomElement() {
+                    if let path = searchResponse.movies[safe: 0]?.posterPath {
                         networkClient.fetch(
-                            url: randomPoster.imageURL
+                            url: .tmdbUrl(.posterURL(posterPath: path))
                         ) { result in
                             switch result {
                             case .success(let imageData):
@@ -60,7 +51,8 @@ struct PostersLoader: PostersLoading {
                             }
                         }
                     } else {
-                        handler(.failure(ParsingError.imageError))
+                        let message = "TMDB have no info about '\(movieId)' id"
+                        throw ApiError.genericError(message: message)
                     }
                 } catch {
                     handler(.failure(error))
