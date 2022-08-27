@@ -30,34 +30,22 @@ final class MovieQuizUITests: XCTestCase {
         app = nil
     }
 
-    @discardableResult
-    private func checkForErrors() -> Bool {
-        // swiftlint:disable:next empty_count
-        if app.alerts.count > 0 {
-            app.buttons["Try again"].tap()
-            return true
-        }
-
-        return false
-    }
-
     func testYesButton() {
         // Given
         sleep(imageLoadSleep)
         let firstPoster = app.images["Poster"]
 
         // When
-        while checkForErrors() { sleep(imageLoadSleep) }
-
         app.buttons["Yes"].tap()
         sleep(questionSwitchSleep + imageLoadSleep)
 
-        while checkForErrors() { sleep(imageLoadSleep) }
-
         // Then
-        let secondPoster = app.images["Poster"]
+        XCTAssertEqual(app.alerts.count, 0)
+
         let indexLabel = app.staticTexts["Index"]
         XCTAssertTrue(indexLabel.label == "2/10")
+
+        let secondPoster = app.images["Poster"]
         XCTAssertFalse(firstPoster == secondPoster)
     }
 
@@ -67,17 +55,16 @@ final class MovieQuizUITests: XCTestCase {
         let firstPoster = app.images["Poster"]
 
         // When
-        while checkForErrors() { sleep(imageLoadSleep) }
-
         app.buttons["No"].tap()
-        sleep(questionSwitchSleep)
-
-        while checkForErrors() { sleep(imageLoadSleep) }
+        sleep(questionSwitchSleep + imageLoadSleep)
 
         // Then
-        let secondPoster = app.images["Poster"]
+        XCTAssertEqual(app.alerts.count, 0)
+
         let indexLabel = app.staticTexts["Index"]
         XCTAssertTrue(indexLabel.label == "2/10")
+
+        let secondPoster = app.images["Poster"]
         XCTAssertFalse(firstPoster == secondPoster)
     }
 
@@ -87,8 +74,6 @@ final class MovieQuizUITests: XCTestCase {
 
         // When
         for _ in 1...10 {
-            while checkForErrors() { sleep(imageLoadSleep) }
-
             app.buttons["No"].tap()
             sleep(questionSwitchSleep + imageLoadSleep)
         }
@@ -107,5 +92,13 @@ final class MovieQuizUITests: XCTestCase {
 
         let resultsButton = resultsAlert.buttons.firstMatch
         XCTAssertEqual(resultsButton.label, "Сыграть еще раз")
+
+        // When
+        resultsButton.tap()
+        sleep(questionSwitchSleep)
+
+        // Then
+        let freshIndexLabel = app.staticTexts["Index"]
+        XCTAssertTrue(freshIndexLabel.label == "1/10")
     }
 }
