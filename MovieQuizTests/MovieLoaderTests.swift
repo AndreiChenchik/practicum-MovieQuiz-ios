@@ -8,7 +8,7 @@
 import XCTest
 @testable import MovieQuiz
 
-struct StubNetworkClient: NetworkRouting {
+struct StubMoviesNetworkClient: NetworkRouting {
     enum TestError: Error {
         case test
     }
@@ -63,7 +63,7 @@ struct StubNetworkClient: NetworkRouting {
 final class MovieLoaderTests: XCTestCase {
     func testSuccessLoading() throws {
         // Given
-        let stubClient = StubNetworkClient(emulateError: false)
+        let stubClient = StubMoviesNetworkClient(emulateError: false)
         let loader = MoviesLoader(networkClient: stubClient)
 
         // When
@@ -87,11 +87,11 @@ final class MovieLoaderTests: XCTestCase {
 
     func testFailureLoading() throws {
         // Given
-        let stubClient = StubNetworkClient(emulateError: true)
+        let stubClient = StubMoviesNetworkClient(emulateError: true)
         let loader = MoviesLoader(networkClient: stubClient)
 
         // When
-        let expectation = expectation(description: "Loading expectation")
+        let expectation = expectation(description: "Failure expectation")
 
         loader.loadMovies { result in
             // Then
