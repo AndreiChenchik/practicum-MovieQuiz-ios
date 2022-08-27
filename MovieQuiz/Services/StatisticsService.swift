@@ -16,7 +16,12 @@ protocol StatisticsService {
 }
 
 final class StatisticServiceImpl: StatisticsService {
-    private let userDefaults = UserDefaults.standard
+    private let userDefaults: UserDefaults
+
+    init(userDefaults: UserDefaults) {
+        self.userDefaults = userDefaults
+    }
+
 
     private enum Keys: String {
         case totalAccuracy, bestGame, gamesCount

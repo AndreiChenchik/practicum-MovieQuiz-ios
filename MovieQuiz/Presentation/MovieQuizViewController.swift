@@ -31,7 +31,8 @@ final class MovieQuizViewController: UIViewController {
             delegate: self
         )
 
-        let statisticService = StatisticServiceImpl()
+        let userDefaults = UserDefaults.standard
+        let statisticService = StatisticServiceImpl(userDefaults: userDefaults)
         self.statisticService = statisticService
 
         resultPresenter = ResultPresenter(statisticService: statisticService)
