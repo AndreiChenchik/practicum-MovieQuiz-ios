@@ -49,13 +49,15 @@ struct PostersLoader: PostersLoading {
                     )
 
                     if let randomPoster = moviePosters.posters.randomElement() {
-                        do {
-                            let imageData = try Data(
-                                contentsOf: randomPoster.imageURL
-                            )
-                            handler(.success(imageData))
-                        } catch {
-                            handler(.failure(error))
+                        networkClient.fetch(
+                            url: randomPoster.imageURL
+                        ) { result in
+                            switch result {
+                            case .success(let imageData):
+                                handler(.success(imageData))
+                            case .failure(let error):
+                                handler(.failure(error))
+                            }
                         }
                     } else {
                         handler(.failure(ParsingError.imageError))
