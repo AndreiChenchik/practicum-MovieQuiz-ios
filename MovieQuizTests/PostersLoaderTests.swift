@@ -19,7 +19,7 @@ struct StubPostersNetworkClient: NetworkRouting {
         print(url.absoluteString)
         if emulateError {
             handler(.failure(TestError.test))
-        } else if url.absoluteString == "testImage.jpg" {
+        } else if url.absoluteString.contains("testImage.jpg") {
             handler(.success(UIImage.checkmark.pngData() ?? Data()))
         } else {
             handler(.success(expectedResponse))
@@ -29,30 +29,42 @@ struct StubPostersNetworkClient: NetworkRouting {
     private var expectedResponse: Data {
         let json = """
         {
-            "imDbId":"tt13314558",
-            "title":"Day Shift",
-            "fullTitle":"Day Shift (2022)",
-            "type":"Movie",
-            "year":"2022",
-            "posters":[
+            "movie_results":[
                 {
-                    "id":"yQNo9KVTyDzx3NXgyCLqnaZ0k0K.jpg",
-                    "link":"testImage.jpg",
-                    "aspectRatio":0.6666666666666666,
-                    "language":"en",
-                    "width":2000,
-                    "height":3000
-                },
-                {
-                    "id":"bI7lGR5HuYlENlp11brKUAaPHuO.jpg",
-                    "link":"testImage.jpg",
-                    "aspectRatio":0.6666666666666666,
-                    "language":"en",
-                    "width":500,
-                    "height":750
+                    "adult":false,
+                    "backdrop_path":"/gr4AHiZLNMgKWIvdnd3peqSkNba.jpg",
+                    "id":6068,
+                    "title":"Six Days Seven Nights",
+                    "original_language":"en",
+                    "original_title":"Six Days Seven Nights",
+                    "overview":"When Quinn, ....",
+                    "poster_path":"/testImage.jpg",
+                    "media_type":"movie",
+                    "genre_ids":[
+                        12,
+                        28,
+                        35,
+                        10749
+                    ],
+                    "popularity":27.308,
+                    "release_date":"1998-06-12",
+                    "video":false,
+                    "vote_average":5.999,
+                    "vote_count":1172
                 }
             ],
-            "errorMessage":""
+            "person_results":[
+
+            ],
+            "tv_results":[
+
+            ],
+            "tv_episode_results":[
+
+            ],
+            "tv_season_results":[
+
+            ]
         }
         """
 
