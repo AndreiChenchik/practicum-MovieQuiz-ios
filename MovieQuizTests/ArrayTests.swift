@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import MovieQuizCore
+@testable import MovieQuiz
 
 final class ArrayTests: XCTestCase {
     func testGetValueInRange() throws {
