@@ -8,8 +8,8 @@
 import XCTest
 
 final class MovieQuizUITests: XCTestCase {
-    let imageLoadSleep: UInt32 = 1
-    let questionSwitchSleep: UInt32 = 2
+    let answerAnimationSleep: UInt32 = 1
+    let loadingExpectationTimeout = 5.0
 
     // swiftlint:disable:next implicitly_unwrapped_optional
     var app: XCUIApplication!
@@ -30,14 +30,24 @@ final class MovieQuizUITests: XCTestCase {
         app = nil
     }
 
+    func waitForProgress() {
+        sleep(answerAnimationSleep)
+
+        expectation(
+            for: NSPredicate(format: "exists == FALSE"),
+            evaluatedWith: app.activityIndicators["Loading Indicator"]
+        )
+        waitForExpectations(timeout: loadingExpectationTimeout)
+    }
+
     func testYesButton() {
         // Given
-        sleep(imageLoadSleep)
+        waitForProgress()
         let firstPoster = app.images["Poster"]
 
         // When
         app.buttons["Yes"].tap()
-        sleep(questionSwitchSleep + imageLoadSleep)
+        waitForProgress()
 
         // Then
         XCTAssertEqual(app.alerts.count, 0)
@@ -51,12 +61,12 @@ final class MovieQuizUITests: XCTestCase {
 
     func testNoButton() {
         // Given
-        sleep(imageLoadSleep)
+        waitForProgress()
         let firstPoster = app.images["Poster"]
 
         // When
         app.buttons["No"].tap()
-        sleep(questionSwitchSleep + imageLoadSleep)
+        waitForProgress()
 
         // Then
         XCTAssertEqual(app.alerts.count, 0)
@@ -70,12 +80,12 @@ final class MovieQuizUITests: XCTestCase {
 
     func testResultAlert() {
         // Given
-        sleep(imageLoadSleep)
+        waitForProgress()
 
         // When
         for _ in 1...10 {
             app.buttons["No"].tap()
-            sleep(questionSwitchSleep + imageLoadSleep)
+            waitForProgress()
         }
 
         // Then
@@ -95,7 +105,7 @@ final class MovieQuizUITests: XCTestCase {
 
         // When
         resultsButton.tap()
-        sleep(questionSwitchSleep)
+        waitForProgress()
 
         // Then
         let freshIndexLabel = app.staticTexts["Index"]
