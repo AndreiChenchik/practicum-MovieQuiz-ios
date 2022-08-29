@@ -32,7 +32,13 @@ final class URLTests: XCTestCase {
             let url = URL.apiURL(endpoint)
 
             // Then
-            XCTAssertEqual(url.host ?? "", "imdb-api.com")
+            switch endpoint {
+            case .mostPopularMovies:
+                XCTAssertEqual(url.host ?? "", "imdb-api.com")
+            case .moviePostersBase:
+                XCTAssertEqual(url.host ?? "", "imdb-api.com")
+            }
+
             XCTAssertFalse(
                 url.isFileURL,
                 "IMDB endpoint \(endpoint.rawValue) can't be empty"
