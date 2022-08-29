@@ -98,7 +98,7 @@ class QuestionFactory: QuestionFactoryProtocol {
                 let movie = self.movies.randomElement()
             else { return }
 
-            self.postersLoader.loadRandomPoster(movieId: movie.id) { result in
+            self.postersLoader.loadPosterData(movieId: movie.id) { result in
                 switch result {
                 case .success(let imageData):
                     let rating = Float(movie.rating) ?? 0
@@ -107,12 +107,16 @@ class QuestionFactory: QuestionFactoryProtocol {
                     let correctAnswer = rating > 7
 
                     let question = QuizQuestion(
-                        image: imageData, text: text, correctAnswer: correctAnswer
+                        image: imageData,
+                        text: text,
+                        correctAnswer: correctAnswer
                     )
 
                     DispatchQueue.main.async { [weak self] in
                         guard let self = self else { return }
-                        self.delegate?.didReceiveNextQuestion(question: question)
+                        self.delegate?.didReceiveNextQuestion(
+                            question: question
+                        )
                     }
                 case .failure(let error):
                     DispatchQueue.main.async { [weak self] in

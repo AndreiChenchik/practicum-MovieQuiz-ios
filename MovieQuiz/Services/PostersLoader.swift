@@ -8,7 +8,7 @@
 import Foundation
 
 protocol PostersLoading {
-    func loadRandomPoster(
+    func loadPosterData(
         movieId: String,
         handler: @escaping (Result<Data, Error>) -> Void
     )
@@ -25,31 +25,37 @@ struct PostersLoader: PostersLoading {
         self.networkClient = networkClient
     }
 
-    func loadRandomPoster(
+    private func loadPosterURLData(
+        url: URL,
+        handler: @escaping (Result<Data, Error>) -> Void
+    ) {
+        networkClient.fetch(url: url) { result in
+            switch result {
+            case .success(let imageData):
+                handler(.success(imageData))
+            case .failure(let error):
+                handler(.failure(error))
+            }
+        }
+    }
+
+    func loadPosterData(
         movieId: String,
         handler: @escaping (Result<Data, Error>) -> Void
     ) {
-        let url = URL.tmdbUrl(.imdbMovieSearch(movieId: movieId))
+        let url = URL.apiURL(.imdbMovieSearch(movieId: movieId))
 
         networkClient.fetch(url: url) { result in
             switch result {
             case .success(let data):
                 do {
                     let searchResponse = try JSONDecoder().decode(
-                        MovieSearchResponse.self, from: data
+                        MovieSearchResult.self, from: data
                     )
 
                     if let path = searchResponse.movies[safe: 0]?.posterPath {
-                        networkClient.fetch(
-                            url: .tmdbUrl(.posterURL(posterPath: path))
-                        ) { result in
-                            switch result {
-                            case .success(let imageData):
-                                handler(.success(imageData))
-                            case .failure(let error):
-                                handler(.failure(error))
-                            }
-                        }
+                        let posterURL = URL.apiURL(.posterURL(posterPath: path))
+                        loadPosterURLData(url: posterURL, handler: handler)
                     } else {
                         let message = "TMDB have no info about '\(movieId)' id"
                         throw ApiError.genericError(message: message)

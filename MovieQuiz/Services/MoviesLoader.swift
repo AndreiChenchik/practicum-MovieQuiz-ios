@@ -23,7 +23,7 @@ struct MoviesLoader: MoviesLoading {
     func loadMovies(
         handler: @escaping (Result<MostPopularMovies, Error>) -> Void
     ) {
-        networkClient.fetch(url: .imdbUrl(.mostPopularMovies)) { result in
+        networkClient.fetch(url: .apiURL(.mostPopularMovies)) { result in
             switch result {
             case .success(let data):
                 do {

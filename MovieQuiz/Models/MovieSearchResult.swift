@@ -1,5 +1,5 @@
 //
-//  MovieSearchResponse.swift
+//  MovieSearchResult.swift
 //  MovieQuiz
 //
 //  Created by Andrei Chenchik on 18/8/22.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MovieSearchResponse: Codable {
+struct MovieSearchResult: Codable {
     let movies: [MovieInfo]
 
     private enum CodingKeys: String, CodingKey {

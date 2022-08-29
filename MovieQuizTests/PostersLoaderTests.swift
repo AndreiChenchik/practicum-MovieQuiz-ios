@@ -81,7 +81,7 @@ final class PostersLoaderTests: XCTestCase {
         // When
         let expectation = expectation(description: "Loading expectation")
 
-        loader.loadRandomPoster(movieId: "testMovieId") { result in
+        loader.loadPosterData(movieId: "testMovieId") { result in
             // Then
             switch result {
             case .success(let imageData):
@@ -103,7 +103,7 @@ final class PostersLoaderTests: XCTestCase {
         // When
         let expectation = expectation(description: "Failure expectation")
 
-        loader.loadRandomPoster(movieId: "testMovieId") { result in
+        loader.loadPosterData(movieId: "testMovieId") { result in
             // Then
             switch result {
             case .success:
