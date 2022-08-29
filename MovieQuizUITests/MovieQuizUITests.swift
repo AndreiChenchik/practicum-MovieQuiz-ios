@@ -9,7 +9,7 @@ import XCTest
 
 final class MovieQuizUITests: XCTestCase {
     let answerAnimationSleep: UInt32 = 1
-    let loadingExpectationTimeout = 5.0
+    let loadingExpectationTimeout = 15.0
 
     // swiftlint:disable:next implicitly_unwrapped_optional
     var app: XCUIApplication!
