@@ -84,7 +84,7 @@ class QuestionFactory: QuestionFactoryProtocol {
         self.delegate = delegate
     }
 
-    private func loadNextQuestion(
+    private func loadQuestion(
         handler: @escaping (Result<QuizQuestion, Error>) -> Void
     ) {
         guard let movie = movies.randomElement() else {
@@ -116,8 +116,13 @@ class QuestionFactory: QuestionFactoryProtocol {
     private func preloadNextQuestion() {
         nextQuestionResult = nil
 
-        self.loadNextQuestion { [weak self] in
-            self?.nextQuestionResult = $0
+        self.loadQuestion { [weak self] result in
+            switch result {
+            case .success(let data):
+                self?.nextQuestionResult = .success(data)
+            default:
+                break
+            }
         }
     }
 
@@ -158,7 +163,7 @@ class QuestionFactory: QuestionFactoryProtocol {
             if let questionResult = self.nextQuestionResult {
                 self.dispatchResult(result: questionResult)
             } else {
-                self.loadNextQuestion { [weak self] result in
+                self.loadQuestion { [weak self] result in
                     self?.dispatchResult(result: result)
                 }
             }
