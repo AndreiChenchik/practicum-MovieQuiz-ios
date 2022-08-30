@@ -25,7 +25,7 @@ struct PostersLoader: PostersLoading {
         self.networkClient = networkClient
     }
 
-    private func loadPosterURLData(
+    private func loadURLData(
         url: URL,
         handler: @escaping (Result<Data, Error>) -> Void
     ) {
@@ -55,7 +55,7 @@ struct PostersLoader: PostersLoading {
 
                     if let path = searchResponse.movies[safe: 0]?.posterPath {
                         let posterURL = URL.apiURL(.posterURL(posterPath: path))
-                        loadPosterURLData(url: posterURL, handler: handler)
+                        loadURLData(url: posterURL, handler: handler)
                     } else {
                         let message = "TMDB have no info about '\(movieId)' id"
                         throw ApiError.genericError(message: message)
