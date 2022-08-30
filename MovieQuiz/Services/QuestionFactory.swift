@@ -19,9 +19,15 @@ protocol QuestionFactoryDelegate: AnyObject {
 }
 
 class QuestionFactory: QuestionFactoryProtocol {
+    enum FactoryError: Error {
+        case noMoviesFound
+    }
+
     private let moviesLoader: MoviesLoading
     private let postersLoader: PostersLoading
     private weak var delegate: QuestionFactoryDelegate?
+
+    private var nextQuestionResult: Result<QuizQuestion, Error>?
 
     private var movies: [MostPopularMovie] = []
 
@@ -78,6 +84,60 @@ class QuestionFactory: QuestionFactoryProtocol {
         self.delegate = delegate
     }
 
+    private func loadNextQuestion(
+        handler: @escaping (Result<QuizQuestion, Error>) -> Void
+    ) {
+        guard let movie = movies.randomElement() else {
+            handler(.failure(FactoryError.noMoviesFound))
+            return
+        }
+
+        postersLoader.loadPosterData(movieId: movie.id) { result in
+            switch result {
+            case .success(let imageData):
+                let rating = Float(movie.rating) ?? 0
+
+                let text = "Рейтинг этого фильма больше чем 7?"
+                let correctAnswer = rating > 7
+
+                let question = QuizQuestion(
+                    image: imageData,
+                    text: text,
+                    correctAnswer: correctAnswer
+                )
+
+                handler(.success(question))
+            case .failure(let error):
+                handler(.failure(error))
+            }
+        }
+    }
+
+    private func preloadNextQuestion() {
+        nextQuestionResult = nil
+
+        self.loadNextQuestion { [weak self] in
+            self?.nextQuestionResult = $0
+        }
+    }
+
+    private func dispatchResult(result: Result<QuizQuestion, Error>) {
+        switch result {
+        case .success(let question):
+            DispatchQueue.main.async { [weak self] in
+                self?.delegate?.didReceiveNextQuestion(
+                    question: question
+                )
+            }
+        case .failure(let error):
+            DispatchQueue.main.async { [weak self] in
+                self?.delegate?.didFailToLoadData(with: error)
+            }
+        }
+
+        preloadNextQuestion()
+    }
+
     func loadData() {
         moviesLoader.loadMovies { [weak self] result in
             guard let self = self else { return }
@@ -93,36 +153,13 @@ class QuestionFactory: QuestionFactoryProtocol {
 
     func requestNextQuestion() {
         DispatchQueue.global().async { [weak self] in
-            guard
-                let self = self,
-                let movie = self.movies.randomElement()
-            else { return }
+            guard let self = self else { return }
 
-            self.postersLoader.loadPosterData(movieId: movie.id) { result in
-                switch result {
-                case .success(let imageData):
-                    let rating = Float(movie.rating) ?? 0
-
-                    let text = "Рейтинг этого фильма больше чем 7?"
-                    let correctAnswer = rating > 7
-
-                    let question = QuizQuestion(
-                        image: imageData,
-                        text: text,
-                        correctAnswer: correctAnswer
-                    )
-
-                    DispatchQueue.main.async { [weak self] in
-                        guard let self = self else { return }
-                        self.delegate?.didReceiveNextQuestion(
-                            question: question
-                        )
-                    }
-                case .failure(let error):
-                    DispatchQueue.main.async { [weak self] in
-                        guard let self = self else { return }
-                        self.delegate?.didFailToLoadData(with: error)
-                    }
+            if let questionResult = self.nextQuestionResult {
+                self.dispatchResult(result: questionResult)
+            } else {
+                self.loadNextQuestion { [weak self] result in
+                    self?.dispatchResult(result: result)
                 }
             }
         }
