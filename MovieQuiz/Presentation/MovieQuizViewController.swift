@@ -97,6 +97,7 @@ final class MovieQuizViewController: UIViewController {
             duration: 0.25,
             options: .transitionCrossDissolve
         ) { [weak self] in
+            self?.imageView.alpha = 1
             self?.imageView.image = model.image
         } completion: { [weak self] _ in
             guard let self = self else { return }
