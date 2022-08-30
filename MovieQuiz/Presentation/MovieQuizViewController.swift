@@ -27,7 +27,12 @@ final class MovieQuizViewController: UIViewController {
 
         configureActivityIndicator()
 
-        let urlSession = URLSession.shared
+        let m200 = 200_000_000
+        let urlCache = URLCache(memoryCapacity: m200, diskCapacity: m200)
+        let urlSessionConfiguration = URLSessionConfiguration.default
+        urlSessionConfiguration.urlCache = urlCache
+        let urlSession = URLSession(configuration: urlSessionConfiguration)
+
         let networkClient = NetworkClient(urlSession: urlSession)
         questionFactory = QuestionFactory(
             moviesLoader: MoviesLoader(networkClient: networkClient),
