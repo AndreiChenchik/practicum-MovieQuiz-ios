@@ -69,7 +69,7 @@ final class PostersLoaderTests: XCTestCase {
     func testSuccessLoading() throws {
         // Given
         let stubClient = StubPostersNetworkClient(emulateError: false)
-        let loader = PostersLoader(networkClient: stubClient)
+        let loader = PosterLoader(networkClient: stubClient)
 
         // When
         let expectation = expectation(description: "Loading expectation")
@@ -91,7 +91,7 @@ final class PostersLoaderTests: XCTestCase {
     func testFailureLoading() throws {
         // Given
         let stubClient = StubPostersNetworkClient(emulateError: true)
-        let loader = PostersLoader(networkClient: stubClient)
+        let loader = PosterLoader(networkClient: stubClient)
 
         // When
         let expectation = expectation(description: "Failure expectation")

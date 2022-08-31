@@ -1,6 +1,6 @@
 import Foundation
 
-struct PostersLoader: PostersLoading {
+struct PosterLoader: PostersLoading {
     private enum ParsingError: Error {
         case imageError
     }

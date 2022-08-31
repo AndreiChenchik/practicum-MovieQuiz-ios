@@ -89,7 +89,7 @@ final class MovieQuizViewController: UIViewController {
         let networkClient = NetworkClient(urlSession: urlSession)
         questionLoader = QuestionFactory(
             moviesLoader: MoviesLoader(networkClient: networkClient),
-            postersLoader: PostersLoader(networkClient: networkClient),
+            postersLoader: PosterLoader(networkClient: networkClient),
             delegate: self
         )
     }
