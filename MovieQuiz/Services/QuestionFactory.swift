@@ -19,8 +19,7 @@ protocol MoviesLoading {
     )
 }
 
-
-class QuestionFactory: QuestionLoading {
+class QuestionFactory {
     enum FactoryError: Error {
         case noMoviesFound
     }
@@ -101,7 +100,12 @@ class QuestionFactory: QuestionLoading {
 
         preloadNextQuestion()
     }
+}
 
+
+// MARK: - QuestionLoading
+
+extension QuestionFactory: QuestionLoading {
     func loadData() {
         moviesLoader.loadMovies { [weak self] result in
             guard let self = self else { return }
