@@ -1,6 +1,6 @@
 import UIKit
 
-class DimViewController: UIViewController {
+final class DimViewController: UIViewController {
     private let dimView = UIView()
     private let dimmedViewController: UIViewController
 

@@ -19,7 +19,7 @@ protocol MoviesLoading {
     )
 }
 
-class QuestionFactory {
+final class QuestionFactory {
     enum FactoryError: Error {
         case noMoviesFound
     }

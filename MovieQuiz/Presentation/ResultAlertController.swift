@@ -5,7 +5,7 @@ protocol DimmedViewControllerDelegate: AnyObject {
     func dimmedViewDidDisappear()
 }
 
-class ResultAlertController: UIAlertController {
+final class ResultAlertController: UIAlertController {
     weak var delegate: DimmedViewControllerDelegate?
 
     override func viewWillDisappear(_ animated: Bool) {
