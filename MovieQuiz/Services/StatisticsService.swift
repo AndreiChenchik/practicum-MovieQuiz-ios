@@ -1,10 +1,3 @@
-//
-//  StatisticsService.swift
-//  MovieQuiz
-//
-//  Created by Andrei Chenchik on 12/8/22.
-//
-
 import Foundation
 
 final class StatisticService: StatisticsStoring, StatisticsReporting {

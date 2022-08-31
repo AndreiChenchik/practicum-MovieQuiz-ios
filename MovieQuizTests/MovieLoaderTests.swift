@@ -1,10 +1,3 @@
-//
-//  MovieLoaderTests.swift
-//  MovieLoaderTests
-//
-//  Created by Andrei Chenchik on 26/8/22.
-//
-
 import XCTest
 @testable import MovieQuiz
 

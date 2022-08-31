@@ -1,10 +1,3 @@
-//
-//  URL+Extensions.swift
-//  MovieQuiz
-//
-//  Created by Andrei Chenchik on 27/8/22.
-//
-
 import Foundation
 
 extension URL {
