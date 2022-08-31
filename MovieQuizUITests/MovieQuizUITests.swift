@@ -1,7 +1,7 @@
 import XCTest
 
 final class MovieQuizUITests: XCTestCase {
-    let answerAnimationSleep: UInt32 = 1
+    let answerAnimationSleep = 0.75
     let loadingExpectationTimeout = 15.0
 
     // swiftlint:disable:next implicitly_unwrapped_optional
@@ -24,13 +24,18 @@ final class MovieQuizUITests: XCTestCase {
     }
 
     func waitForProgress() {
-        sleep(answerAnimationSleep)
+        let sleepTimer = UInt32(answerAnimationSleep * 1_000_000)
+        usleep(sleepTimer)
 
-        expectation(
-            for: NSPredicate(format: "exists == FALSE"),
-            evaluatedWith: app.activityIndicators["Loading Indicator"]
+        wait(
+            for: [
+                expectation(
+                    for: NSPredicate(format: "exists == FALSE"),
+                    evaluatedWith: app.activityIndicators["Loading Indicator"]
+                )
+            ],
+            timeout: loadingExpectationTimeout
         )
-        waitForExpectations(timeout: loadingExpectationTimeout)
     }
 
     func testYesButton() {
