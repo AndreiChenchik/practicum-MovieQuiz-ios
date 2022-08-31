@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21223" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="ipad7_9" orientation="portrait" layout="fullscreen" appearance="dark"/>
+    <device id="retina4_0" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21204"/>
@@ -22,23 +22,23 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="MovieQuizViewController" customModule="MovieQuiz" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="744" height="1133"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="jCT-OT-Pg7">
-                                <rect key="frame" x="79" y="34" width="586" height="1065"/>
+                                <rect key="frame" x="35.5" y="10" width="249" height="558"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="15a-YK-W5g">
-                                        <rect key="frame" x="0.0" y="0.0" width="586" height="23.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="249" height="0.0"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Вопрос:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aVF-tb-rWe" userLabel="Question Title Label">
-                                                <rect key="frame" x="0.0" y="0.0" width="550" height="23.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="213" height="0.0"/>
                                                 <fontDescription key="fontDescription" name="YSDisplay-Medium" family="YS Display" pointSize="20"/>
                                                 <color key="textColor" name="YP White"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="1/10" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h0K-JO-VFr" userLabel="Index Label">
-                                                <rect key="frame" x="550" y="0.0" width="36" height="23.5"/>
+                                                <rect key="frame" x="213" y="0.0" width="36" height="0.0"/>
                                                 <accessibility key="accessibilityConfiguration" identifier="Index"/>
                                                 <fontDescription key="fontDescription" name="YSDisplay-Medium" family="YS Display" pointSize="20"/>
                                                 <color key="textColor" name="YP White"/>
@@ -47,7 +47,7 @@
                                         </subviews>
                                     </stackView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="scaleAspectFill" verticalCompressionResistancePriority="749" image="LaunchScreen" translatesAutoresizingMaskIntoConstraints="NO" id="EjF-mK-EnV" userLabel="Preview Image">
-                                        <rect key="frame" x="0.0" y="43.5" width="586" height="878.5"/>
+                                        <rect key="frame" x="0.0" y="20" width="249" height="373"/>
                                         <accessibility key="accessibilityConfiguration" identifier="Poster"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="EjF-mK-EnV" secondAttribute="height" multiplier="2:3" id="FW9-td-04R"/>
@@ -59,10 +59,10 @@
                                         </userDefinedRuntimeAttributes>
                                     </imageView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JJy-RA-Phn">
-                                        <rect key="frame" x="0.0" y="942" width="586" height="43"/>
+                                        <rect key="frame" x="0.0" y="413" width="249" height="65"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Рейтинг этого фильма больше чем 7?" textAlignment="center" lineBreakMode="clip" numberOfLines="2" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="HQc-RI-JES" userLabel="Question Label">
-                                                <rect key="frame" x="92.5" y="8" width="401.5" height="27"/>
+                                                <rect key="frame" x="22" y="8" width="205" height="49"/>
                                                 <fontDescription key="fontDescription" name="YSDisplay-Bold" family="YS Display" pointSize="23"/>
                                                 <color key="textColor" name="YP White"/>
                                                 <nil key="highlightedColor"/>
@@ -76,10 +76,10 @@
                                         </constraints>
                                     </view>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="3Zd-tg-Mqa">
-                                        <rect key="frame" x="0.0" y="1005" width="586" height="60"/>
+                                        <rect key="frame" x="0.0" y="498" width="249" height="60"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ywP-RJ-8Oy" userLabel="No button">
-                                                <rect key="frame" x="0.0" y="0.0" width="283" height="60"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="114.5" height="60"/>
                                                 <color key="backgroundColor" name="YP White"/>
                                                 <accessibility key="accessibilityConfiguration" identifier="No"/>
                                                 <fontDescription key="fontDescription" name="YSDisplay-Medium" family="YS Display" pointSize="20"/>
@@ -98,7 +98,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k6e-aW-lcF" userLabel="Yes button">
-                                                <rect key="frame" x="303" y="0.0" width="283" height="60"/>
+                                                <rect key="frame" x="134.5" y="0.0" width="114.5" height="60"/>
                                                 <color key="backgroundColor" name="YP White"/>
                                                 <accessibility key="accessibilityConfiguration" identifier="Yes"/>
                                                 <fontDescription key="fontDescription" name="YSDisplay-Medium" family="YS Display" pointSize="20"/>
@@ -129,7 +129,7 @@
                         <constraints>
                             <constraint firstItem="jCT-OT-Pg7" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="0bL-Qb-psg"/>
                             <constraint firstItem="jCT-OT-Pg7" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="Ukn-sM-gyy"/>
-                            <constraint firstAttribute="bottom" secondItem="jCT-OT-Pg7" secondAttribute="bottom" constant="34" id="YUU-7e-2Ak"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="jCT-OT-Pg7" secondAttribute="bottom" identifier="stackViewLowerConstraint" id="YUU-7e-2Ak"/>
                             <constraint firstItem="jCT-OT-Pg7" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="y3F-sA-oVg"/>
                         </constraints>
                     </view>

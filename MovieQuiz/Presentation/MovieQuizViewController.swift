@@ -54,6 +54,16 @@ final class MovieQuizViewController: UIViewController {
         configureActivityIndicator()
     }
 
+    override func viewDidLayoutSubviews() {
+        if
+            let window = UIApplication.shared.windows.first,
+            let bottomConstraint = view.constraints
+                .filter({ $0.identifier == "stackViewLowerConstraint" }).first {
+                    let isDeviceWithoutButton = window.safeAreaInsets.bottom > 0
+                    bottomConstraint.constant = isDeviceWithoutButton ? 0 : 20
+        }
+    }
+
     private func setDependencies() {
         let userDefaults = UserDefaults.standard
         let statisticService = StatisticService(userDefaults: userDefaults)
