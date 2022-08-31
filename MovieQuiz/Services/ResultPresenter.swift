@@ -7,18 +7,10 @@
 
 import UIKit
 
-protocol ResultPresenting {
-    func displayResults(
-        from state: GameState,
-        over viewController: UIViewController,
-        completion: @escaping () -> Void
-    )
-}
-
 final class ResultPresenter: ResultPresenting {
-    let statisticService: StatisticsService
+    let statisticService: StatisticsStoring & StatisticsReporting
 
-    init(statisticService: StatisticsService) {
+    init(statisticService: StatisticsStoring & StatisticsReporting) {
         self.statisticService = statisticService
     }
 

@@ -7,18 +7,27 @@
 
 import Foundation
 
-protocol QuestionFactoryProtocol {
-    func loadData()
-    func requestNextQuestion()
-}
-
 protocol QuestionFactoryDelegate: AnyObject {
     func didReceiveNextQuestion(question: QuizQuestion?)
     func didLoadDataFromServer()
     func didFailToLoadData(with error: Error)
 }
 
-class QuestionFactory: QuestionFactoryProtocol {
+protocol PostersLoading {
+    func loadPosterData(
+        movieId: String,
+        handler: @escaping (Result<Data, Error>) -> Void
+    )
+}
+
+protocol MoviesLoading {
+    func loadMovies(
+        handler: @escaping (Result<MostPopularMovies, Error>) -> Void
+    )
+}
+
+
+class QuestionFactory: QuestionLoading {
     enum FactoryError: Error {
         case noMoviesFound
     }

@@ -7,6 +7,11 @@
 
 import UIKit
 
+protocol DimmedViewControllerDelegate: AnyObject {
+    func dimmedViewWillDisappear()
+    func dimmedViewDidDisappear()
+}
+
 class ResultAlertController: UIAlertController {
     weak var delegate: DimmedViewControllerDelegate?
 

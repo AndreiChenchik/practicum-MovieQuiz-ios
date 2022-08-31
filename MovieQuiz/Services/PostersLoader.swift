@@ -7,13 +7,6 @@
 
 import Foundation
 
-protocol PostersLoading {
-    func loadPosterData(
-        movieId: String,
-        handler: @escaping (Result<Data, Error>) -> Void
-    )
-}
-
 struct PostersLoader: PostersLoading {
     private enum ParsingError: Error {
         case imageError

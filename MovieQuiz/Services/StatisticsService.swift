@@ -7,15 +7,7 @@
 
 import Foundation
 
-protocol StatisticsService {
-    var totalAccuracy: Double { get }
-    var gamesCount: Int { get }
-    var bestGame: GameRecord { get }
-
-    func store(correct count: Int, total amount: Int)
-}
-
-final class StatisticServiceImpl: StatisticsService {
+final class StatisticService: StatisticsStoring, StatisticsReporting {
     private let userDefaults: UserDefaults
 
     init(userDefaults: UserDefaults) {

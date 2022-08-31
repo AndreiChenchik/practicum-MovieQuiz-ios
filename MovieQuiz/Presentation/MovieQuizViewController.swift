@@ -1,11 +1,35 @@
 import UIKit
 
+protocol QuestionLoading {
+    func loadData()
+    func requestNextQuestion()
+}
+
+protocol StatisticsReporting {
+    var totalAccuracy: Double { get }
+    var gamesCount: Int { get }
+    var bestGame: GameRecord { get }
+}
+
+protocol StatisticsStoring {
+    func store(correct count: Int, total amount: Int)
+}
+
+protocol ResultPresenting {
+    func displayResults(
+        from state: GameState,
+        over viewController: UIViewController,
+        completion: @escaping () -> Void
+    )
+}
+
 final class MovieQuizViewController: UIViewController {
+    typealias StatisticsProtocols = StatisticsStoring & StatisticsReporting
     private var state = GameState()
 
-    private var questionFactory: QuestionFactoryProtocol?
+    private var questionLoader: QuestionLoading?
     private var resultPresenter: ResultPresenting?
-    private var statisticService: StatisticsService?
+    private var statisticService: StatisticsProtocols?
 
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var textLabel: UILabel!
@@ -25,33 +49,44 @@ final class MovieQuizViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        setDependencies()
+        loadData()
         configureActivityIndicator()
+    }
 
-        let m200 = 200_000_000
-        let urlCache = URLCache(memoryCapacity: m200, diskCapacity: m200)
-        let urlSessionConfiguration = URLSessionConfiguration.default
-        urlSessionConfiguration.urlCache = urlCache
-        let urlSession = URLSession(configuration: urlSessionConfiguration)
-
-        let networkClient = NetworkClient(urlSession: urlSession)
-        questionFactory = QuestionFactory(
-            moviesLoader: MoviesLoader(networkClient: networkClient),
-            postersLoader: PostersLoader(networkClient: networkClient),
-            delegate: self
-        )
-
+    private func setDependencies() {
         let userDefaults = UserDefaults.standard
-        let statisticService = StatisticServiceImpl(userDefaults: userDefaults)
+        let statisticService = StatisticService(userDefaults: userDefaults)
         self.statisticService = statisticService
 
         resultPresenter = ResultPresenter(statisticService: statisticService)
 
-        loadData()
+        prepareQuestionFactory()
+    }
+
+    private func prepareQuestionFactory() {
+        let urlSessionConfiguration = URLSessionConfiguration.default
+        let size200mb = 200 * 1024 * 1024
+        let urlCache = URLCache(
+            memoryCapacity: size200mb,
+            diskCapacity: size200mb
+        )
+        urlSessionConfiguration.urlCache = urlCache
+        let urlSession = URLSession(
+            configuration: urlSessionConfiguration
+        )
+
+        let networkClient = NetworkClient(urlSession: urlSession)
+        questionLoader = QuestionFactory(
+            moviesLoader: MoviesLoader(networkClient: networkClient),
+            postersLoader: PostersLoader(networkClient: networkClient),
+            delegate: self
+        )
     }
 
     private func loadData() {
         activityIndicator.startAnimating()
-        questionFactory?.loadData()
+        questionLoader?.loadData()
     }
 
     private func configureActivityIndicator() {
@@ -136,7 +171,7 @@ final class MovieQuizViewController: UIViewController {
 
 extension MovieQuizViewController: QuestionFactoryDelegate {
     func didLoadDataFromServer() {
-        questionFactory?.requestNextQuestion()
+        questionLoader?.requestNextQuestion()
     }
 
     func didFailToLoadData(with error: Error) {
@@ -192,14 +227,14 @@ extension MovieQuizViewController {
                 from: state,
                 over: self
             ) { [weak self] in
-                self?.questionFactory?.requestNextQuestion()
+                self?.questionLoader?.requestNextQuestion()
             }
 
             state.currentScore = 0
             state.currentQuestionNumber = 0
         } else {
             activityIndicator.startAnimating()
-            questionFactory?.requestNextQuestion()
+            questionLoader?.requestNextQuestion()
         }
     }
 }
