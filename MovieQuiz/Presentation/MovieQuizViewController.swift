@@ -5,8 +5,6 @@ protocol QuestionLoading {
     func requestNextQuestion()
 }
 
-
-
 protocol ResultPresenting {
     func displayResults(
         from state: GameState,
