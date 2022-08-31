@@ -29,16 +29,16 @@
                                 <rect key="frame" x="39.5" y="10" width="296" height="657"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="15a-YK-W5g">
-                                        <rect key="frame" x="0.0" y="0.0" width="296" height="23.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="296" height="23"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Вопрос:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aVF-tb-rWe" userLabel="Question Title Label">
-                                                <rect key="frame" x="0.0" y="0.0" width="260" height="23.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="260" height="23"/>
                                                 <fontDescription key="fontDescription" name="YSDisplay-Medium" family="YS Display" pointSize="20"/>
                                                 <color key="textColor" name="YP White"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="1/10" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h0K-JO-VFr" userLabel="Index Label">
-                                                <rect key="frame" x="260" y="0.0" width="36" height="23.5"/>
+                                                <rect key="frame" x="260" y="0.0" width="36" height="23"/>
                                                 <accessibility key="accessibilityConfiguration" identifier="Index"/>
                                                 <fontDescription key="fontDescription" name="YSDisplay-Medium" family="YS Display" pointSize="20"/>
                                                 <color key="textColor" name="YP White"/>
@@ -46,18 +46,27 @@
                                             </label>
                                         </subviews>
                                     </stackView>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="scaleAspectFill" verticalCompressionResistancePriority="749" image="LaunchScreen" translatesAutoresizingMaskIntoConstraints="NO" id="EjF-mK-EnV" userLabel="Preview Image">
-                                        <rect key="frame" x="0.0" y="43.5" width="296" height="443.5"/>
-                                        <accessibility key="accessibilityConfiguration" identifier="Poster"/>
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WUm-GC-ebX" userLabel="Image Container">
+                                        <rect key="frame" x="0.0" y="43" width="296" height="444"/>
+                                        <subviews>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="scaleAspectFill" verticalCompressionResistancePriority="749" image="LaunchScreen" translatesAutoresizingMaskIntoConstraints="NO" id="EjF-mK-EnV" userLabel="Preview Image">
+                                                <rect key="frame" x="0.0" y="0.0" width="296" height="444"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="Poster"/>
+                                            </imageView>
+                                        </subviews>
                                         <constraints>
-                                            <constraint firstAttribute="width" secondItem="EjF-mK-EnV" secondAttribute="height" multiplier="2:3" id="FW9-td-04R"/>
+                                            <constraint firstAttribute="width" secondItem="WUm-GC-ebX" secondAttribute="height" multiplier="2:3" id="CIa-gB-CJ2"/>
+                                            <constraint firstItem="EjF-mK-EnV" firstAttribute="height" secondItem="WUm-GC-ebX" secondAttribute="height" id="gNZ-n3-xea"/>
+                                            <constraint firstItem="EjF-mK-EnV" firstAttribute="centerX" secondItem="WUm-GC-ebX" secondAttribute="centerX" id="gkH-cz-qgx"/>
+                                            <constraint firstItem="EjF-mK-EnV" firstAttribute="centerY" secondItem="WUm-GC-ebX" secondAttribute="centerY" id="sWp-sH-nty"/>
+                                            <constraint firstItem="EjF-mK-EnV" firstAttribute="width" secondItem="WUm-GC-ebX" secondAttribute="width" id="y5Y-MH-JMf"/>
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                 <integer key="value" value="20"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
-                                    </imageView>
+                                    </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JJy-RA-Phn">
                                         <rect key="frame" x="0.0" y="507" width="296" height="70"/>
                                         <subviews>
@@ -136,6 +145,7 @@
                     <connections>
                         <outlet property="counterLabel" destination="h0K-JO-VFr" id="wG0-WU-Xwe"/>
                         <outlet property="imageView" destination="EjF-mK-EnV" id="XRX-OO-d1m"/>
+                        <outlet property="imageViewContainer" destination="WUm-GC-ebX" id="2TS-m4-Akr"/>
                         <outlet property="noButton" destination="ywP-RJ-8Oy" id="xMF-Wk-Nmf"/>
                         <outlet property="textLabel" destination="HQc-RI-JES" id="jF3-Gq-vfv"/>
                         <outlet property="yesButton" destination="k6e-aW-lcF" id="9ws-fH-nEL"/>

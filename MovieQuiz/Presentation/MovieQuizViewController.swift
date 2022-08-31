@@ -21,6 +21,7 @@ final class MovieQuizViewController: UIViewController {
     private var resultPresenter: ResultPresenting?
     private var statisticService: StatisticsProtocols?
 
+    @IBOutlet weak var imageViewContainer: UIView!
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var textLabel: UILabel!
     @IBOutlet private weak var counterLabel: UILabel!
@@ -123,9 +124,7 @@ final class MovieQuizViewController: UIViewController {
         textLabel.text = model.question
         counterLabel.text = model.questionNumber
 
-        UIView.animate(withDuration: 0.25) { [weak self] in
-            self?.imageView.layer.borderWidth = 0
-        }
+        imageViewContainer.animateBorderWidth(toValue: 0, duration: 0.25)
 
         UIView.transition(
             with: imageView,
@@ -146,15 +145,11 @@ final class MovieQuizViewController: UIViewController {
         yesButton.isEnabled = false
         noButton.isEnabled = false
 
-        UIView.animate(withDuration: 0.25) { [weak self] in
-            guard let self = self else { return }
-
-            self.imageView.layer.borderWidth = 8
-            self.imageView.layer.borderColor =
+        imageViewContainer.layer.borderColor =
             isAnswerCorrect
             ? UIColor(colorAsset: .ypGreen).cgColor
             : UIColor(colorAsset: .ypRed).cgColor
-        }
+        imageViewContainer.animateBorderWidth(toValue: 8, duration: 0.25)
     }
 
     @IBAction private func yesButtonClicked(_ sender: Any) {
@@ -212,7 +207,7 @@ extension MovieQuizViewController {
 
         show(isAnswerCorrect: isCorrect)
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.75) {
             self.showNextQuestionOrResults()
         }
     }
