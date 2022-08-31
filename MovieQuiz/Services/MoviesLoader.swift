@@ -15,7 +15,7 @@ struct MoviesLoader: MoviesLoading {
             case .success(let data):
                 do {
                     let apiResponse = try JSONDecoder().decode(
-                        IMDBApiResponse.self, from: data
+                        ApiErrorResponse.self, from: data
                     )
 
                     if !apiResponse.error.isEmpty {

@@ -1,6 +1,6 @@
 import Foundation
 
-struct IMDBApiResponse: Codable {
+struct ApiErrorResponse: Codable {
     let error: String
 
     private enum CodingKeys: String, CodingKey {
