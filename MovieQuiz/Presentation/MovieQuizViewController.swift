@@ -207,7 +207,7 @@ extension MovieQuizViewController {
 
         show(isAnswerCorrect: isCorrect)
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.75) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
             self.showNextQuestionOrResults()
         }
     }
