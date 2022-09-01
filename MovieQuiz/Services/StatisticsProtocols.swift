@@ -7,5 +7,5 @@ protocol StatisticsReporting {
 }
 
 protocol StatisticsStoring {
-    func store(correct count: Int, total amount: Int)
+    func store(correct count: Int, total amount: Int, date: Date)
 }

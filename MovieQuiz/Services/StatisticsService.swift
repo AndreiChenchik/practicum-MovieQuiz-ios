@@ -1,6 +1,6 @@
 import Foundation
 
-final class StatisticService: StatisticsStoring, StatisticsReporting {
+final class StatisticsService: StatisticsStoring, StatisticsReporting {
     private let userDefaults: UserDefaults
 
     init(userDefaults: UserDefaults) {
@@ -42,10 +42,10 @@ final class StatisticService: StatisticsStoring, StatisticsReporting {
         }
     }
 
-    func store(correct count: Int, total amount: Int) {
+    func store(correct count: Int, total amount: Int, date: Date) {
         let gameRecord = bestGame
         let newGameRecord = GameRecord(
-            correct: count, total: amount, date: Date()
+            correct: count, total: amount, date: date
         )
 
         totalAccuracy = (

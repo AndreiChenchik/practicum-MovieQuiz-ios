@@ -57,7 +57,7 @@ final class MovieQuizViewController: UIViewController {
 
     private func setDependencies() {
         let userDefaults = UserDefaults.standard
-        let statisticService = StatisticService(userDefaults: userDefaults)
+        let statisticService = StatisticsService(userDefaults: userDefaults)
         self.statisticService = statisticService
 
         resultPresenter = ResultPresenter(statisticService: statisticService)
@@ -215,7 +215,9 @@ extension MovieQuizViewController {
     private func showNextQuestionOrResults() {
         if state.currentQuestionNumber >= state.questionsAmount {
             statisticService?.store(
-                correct: state.currentScore, total: state.questionsAmount
+                correct: state.currentScore,
+                total: state.questionsAmount,
+                date: Date()
             )
 
             resultPresenter?.displayResults(
