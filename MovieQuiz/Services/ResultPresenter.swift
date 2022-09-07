@@ -36,9 +36,7 @@ final class ResultPresenter: ResultPresenting {
     }
 
     private func convert(from state: GameState) -> QuizResultViewModel {
-    #warning("Ugly hardcode")
-        let totalQuestions = 10
-
+        let totalQuestions = state.questionsAmount
         let isIdealSession = state.currentScore == totalQuestions
 
         let title =

@@ -24,9 +24,10 @@ final class QuestionFactory {
         case noMoviesFound
     }
 
+    weak var delegate: QuestionFactoryDelegate?
+
     private let moviesLoader: MoviesLoading
     private let postersLoader: PostersLoading
-    private weak var delegate: QuestionFactoryDelegate?
 
     private var nextQuestionResult: Result<QuizQuestion, Error>?
 
@@ -35,7 +36,7 @@ final class QuestionFactory {
     init(
         moviesLoader: MoviesLoading,
         postersLoader: PostersLoading,
-        delegate: QuestionFactoryDelegate
+        delegate: QuestionFactoryDelegate? = nil
     ) {
         self.moviesLoader = moviesLoader
         self.postersLoader = postersLoader
