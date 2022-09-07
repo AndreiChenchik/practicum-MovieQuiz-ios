@@ -13,23 +13,35 @@ protocol ResultPresenting {
     )
 }
 
+protocol MovieQuizViewControllerProtocol: AnyObject {
+    func show(question model: QuizStepViewModel)
+
+    func highlightImageBorder(isAnswerCorrect: Bool)
+
+    func showLoadingIndicator()
+    func hideLoadingIndicator()
+
+    func showNetworkError(message: String)
+}
+
 final class MovieQuizPresenter {
     private var state: GameState
 
     typealias StatisticsProtocols = StatisticsStoring & StatisticsReporting
-
     private let statisticService: StatisticsProtocols
+
     private let questionLoader: QuestionLoading
     private let resultPresenter: ResultPresenting
 
-    weak var viewController: MovieQuizViewController?
+    typealias VCProtocols = MovieQuizViewControllerProtocol & UIViewController
+    weak var viewController: VCProtocols?
 
     init(
         statisticService: StatisticsProtocols,
         questionLoader: QuestionLoading,
         resultPresenter: ResultPresenting,
         state: GameState,
-        viewController: MovieQuizViewController
+        viewController: VCProtocols
     ) {
         self.state = state
         self.statisticService = statisticService
@@ -78,7 +90,8 @@ extension MovieQuizPresenter: QuestionFactoryDelegate {
         state.currentQuestion = question
         increaseQuestionNumber()
 
-        let questionViewModel = convert(from: question)
+        let number = "\(state.currentQuestionNumber)/\(state.questionsAmount)"
+        let questionViewModel = convert(from: question, number: number)
 
         DispatchQueue.main.async { [viewController] in
             viewController?.hideLoadingIndicator()
@@ -157,10 +170,9 @@ extension MovieQuizPresenter {
 // MARK: - Data Adapters
 
 extension MovieQuizPresenter {
-    private func convert(from model: QuizQuestion) -> QuizStepViewModel {
+    func convert(from model: QuizQuestion, number: String) -> QuizStepViewModel {
         let image = UIImage(data: model.image) ?? .remove
         let question = model.text
-        let number = "\(state.currentQuestionNumber)/\(state.questionsAmount)"
 
         let viewModel = QuizStepViewModel(
             image: image,

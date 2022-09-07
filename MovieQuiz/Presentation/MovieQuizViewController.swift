@@ -114,7 +114,7 @@ extension MovieQuizViewController {
 
 // MARK: - UI Updates
 
-extension MovieQuizViewController {
+extension MovieQuizViewController: MovieQuizViewControllerProtocol {
     func showLoadingIndicator() {
         activityIndicator.startAnimating()
     }
