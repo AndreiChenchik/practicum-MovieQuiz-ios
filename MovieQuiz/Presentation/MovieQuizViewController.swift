@@ -3,7 +3,7 @@ import UIKit
 final class MovieQuizViewController: UIViewController {
     private var presenter: MovieQuizPresenter?
 
-    @IBOutlet weak var imageViewContainer: UIView!
+    @IBOutlet private weak var imageViewContainer: UIView!
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var textLabel: UILabel!
     @IBOutlet private weak var counterLabel: UILabel!
