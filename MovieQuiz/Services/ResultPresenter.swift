@@ -36,15 +36,16 @@ final class ResultPresenter: ResultPresenting {
     }
 
     private func convert(from state: GameState) -> QuizResultViewModel {
-        let isIdealSession = state.currentScore == state.questionsAmount
+    #warning("Ugly hardcode")
+        let totalQuestions = 10
+
+        let isIdealSession = state.currentScore == totalQuestions
+
         let title =
             isIdealSession
             ? "Идеальный результат!"
             : "Этот раунд окончен!"
-
         let buttonText = "Сыграть еще раз"
-
-        let totalQuestions = state.questionsAmount
 
         let totalAccuracy = statisticService.totalAccuracy
         let accuracyDescription = String(format: "%.2f", totalAccuracy * 100)

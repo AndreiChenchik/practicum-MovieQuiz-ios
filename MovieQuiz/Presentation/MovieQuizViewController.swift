@@ -19,6 +19,8 @@ final class MovieQuizViewController: UIViewController {
 
     private var questionLoader: QuestionLoading?
     private var resultPresenter: ResultPresenting?
+    private var questionPresenter = MovieQuizPresenter()
+
     private var statisticService: StatisticsProtocols?
 
     @IBOutlet weak var imageViewContainer: UIView!
@@ -179,14 +181,9 @@ extension MovieQuizViewController: QuestionFactoryDelegate {
         guard let question = question else { return }
 
         self.state.currentQuestion = question
-        self.state.currentQuestionNumber += 1
+        self.questionPresenter.switchToNextQuestion()
 
-        let questionNumber = self.state.currentQuestionNumber
-        let questionsAmount = self.state.questionsAmount
-        let questionViewModel = convert(
-            from: question,
-            with: "\(questionNumber)/\(questionsAmount)"
-        )
+        let questionViewModel = self.questionPresenter.convert(from: question)
 
         DispatchQueue.main.async {
             self.activityIndicator.stopAnimating()
@@ -213,10 +210,10 @@ extension MovieQuizViewController {
     }
 
     private func showNextQuestionOrResults() {
-        if state.currentQuestionNumber >= state.questionsAmount {
+        if questionPresenter.isLastQuestion() {
             statisticService?.store(
                 correct: state.currentScore,
-                total: state.questionsAmount,
+                total: questionPresenter.questionsAmount,
                 date: Date()
             )
 
@@ -228,33 +225,11 @@ extension MovieQuizViewController {
             }
 
             state.currentScore = 0
-            state.currentQuestionNumber = 0
+            questionPresenter.resetQuestionIndex()
         } else {
             activityIndicator.startAnimating()
             questionLoader?.requestNextQuestion()
         }
-    }
-}
-
-
-// MARK: - Data Converters
-
-extension MovieQuizViewController {
-    private func convert(
-        from model: QuizQuestion,
-        with number: String
-    ) -> QuizStepViewModel {
-        let image = UIImage(data: model.image) ?? .remove
-        let question = model.text
-        let questionNumber = number
-
-        let viewModel = QuizStepViewModel(
-            image: image,
-            question: question,
-            questionNumber: questionNumber
-        )
-
-        return viewModel
     }
 }
 
