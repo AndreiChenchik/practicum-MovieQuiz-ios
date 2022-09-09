@@ -68,7 +68,7 @@ final class MovieLoaderTests: XCTestCase {
             case .success(let movies):
                 XCTAssertEqual(movies.items.count, 2)
                 XCTAssertEqual(movies.items[0].title, "Prey (2022)")
-                XCTAssertEqual(movies.items[1].rating, "6.5")
+                XCTAssertEqual(movies.items[1].rating, 6.5)
                 expectation.fulfill()
             case .failure:
                 XCTFail("Unexpected failure")
