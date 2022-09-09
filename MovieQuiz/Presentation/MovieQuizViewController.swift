@@ -11,7 +11,7 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private weak var yesButton: UIButton!
     @IBOutlet private weak var noButton: UIButton!
 
-    private var activityIndicator = {
+    private var activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView()
         indicator.accessibilityIdentifier = "Loading Indicator"
         return indicator
