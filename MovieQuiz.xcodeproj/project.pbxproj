@@ -12,7 +12,6 @@
 		38026FC428A6BE9E00CAB37B /* GameRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38026FC328A6BE9E00CAB37B /* GameRecord.swift */; };
 		3820141928BA351B00DD05AC /* URL+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3820141828BA351B00DD05AC /* URL+Extensions.swift */; };
 		3820141D28BA3EF900DD05AC /* URLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3820141C28BA3EF900DD05AC /* URLTests.swift */; };
-		3820141F28BA417200DD05AC /* QuestionFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3820141E28BA417200DD05AC /* QuestionFactoryTests.swift */; };
 		3820142128BA42A200DD05AC /* StatisticsServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3820142028BA42A200DD05AC /* StatisticsServiceTests.swift */; };
 		3820142528BA42C500DD05AC /* PostersLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3820142428BA42C500DD05AC /* PostersLoaderTests.swift */; };
 		3820142728BA42F700DD05AC /* NetworkClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3820142628BA42F700DD05AC /* NetworkClientTests.swift */; };
@@ -78,7 +77,6 @@
 		38026FC328A6BE9E00CAB37B /* GameRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameRecord.swift; sourceTree = "<group>"; };
 		3820141828BA351B00DD05AC /* URL+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Extensions.swift"; sourceTree = "<group>"; };
 		3820141C28BA3EF900DD05AC /* URLTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLTests.swift; sourceTree = "<group>"; };
-		3820141E28BA417200DD05AC /* QuestionFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionFactoryTests.swift; sourceTree = "<group>"; };
 		3820142028BA42A200DD05AC /* StatisticsServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsServiceTests.swift; sourceTree = "<group>"; };
 		3820142428BA42C500DD05AC /* PostersLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostersLoaderTests.swift; sourceTree = "<group>"; };
 		3820142628BA42F700DD05AC /* NetworkClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClientTests.swift; sourceTree = "<group>"; };
@@ -166,7 +164,6 @@
 				38F2624F28B947CF00057EC1 /* MovieLoaderTests.swift */,
 				3820142628BA42F700DD05AC /* NetworkClientTests.swift */,
 				3820142428BA42C500DD05AC /* PostersLoaderTests.swift */,
-				3820141E28BA417200DD05AC /* QuestionFactoryTests.swift */,
 				3820142028BA42A200DD05AC /* StatisticsServiceTests.swift */,
 				3882F6D128BA181000E0B8A3 /* UIColorTests.swift */,
 				3820141C28BA3EF900DD05AC /* URLTests.swift */,
@@ -448,7 +445,6 @@
 				38D9A10D28BF5535005F40F9 /* DateTests.swift in Sources */,
 				3882F6D228BA181000E0B8A3 /* UIColorTests.swift in Sources */,
 				384BD3FA28C8E040009C4922 /* MovieQuizPresenterTests.swift in Sources */,
-				3820141F28BA417200DD05AC /* QuestionFactoryTests.swift in Sources */,
 				3820142128BA42A200DD05AC /* StatisticsServiceTests.swift in Sources */,
 				3820142728BA42F700DD05AC /* NetworkClientTests.swift in Sources */,
 				3820142528BA42C500DD05AC /* PostersLoaderTests.swift in Sources */,
@@ -536,7 +532,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UM3QPHF8E3;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = me.chenchik.MovieQuizUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -555,7 +551,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UM3QPHF8E3;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = me.chenchik.MovieQuizUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -575,7 +571,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UM3QPHF8E3;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = me.chenchik.MovieQuizTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -595,7 +591,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UM3QPHF8E3;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = me.chenchik.MovieQuizTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
