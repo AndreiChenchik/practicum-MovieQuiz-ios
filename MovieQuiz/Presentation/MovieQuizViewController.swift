@@ -30,6 +30,7 @@ extension MovieQuizViewController {
     }
 
     override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         if
             let window = UIApplication.shared.windows.first,
             let bottomConstraint = view.constraints
