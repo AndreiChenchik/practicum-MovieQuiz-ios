@@ -4,7 +4,8 @@ import XCTest
 final class DateTests: XCTestCase {
     override func setUp() {
         super.setUp()
-        NSTimeZone.default = TimeZone.gmt
+        // swiftlint:disable:next force_unwrapping
+        NSTimeZone.default = TimeZone(secondsFromGMT: 0)!
     }
 
     override func tearDown() {
