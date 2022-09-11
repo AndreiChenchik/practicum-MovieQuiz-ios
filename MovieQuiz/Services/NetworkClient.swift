@@ -1,13 +1,12 @@
-//
-//  NetworkClient.swift
-//  MovieQuiz
-//
-//  Created by Andrei Chenchik on 18/8/22.
-//
-
 import Foundation
 
-struct NetworkClient {
+struct NetworkClient: NetworkRouting {
+    private let urlSession: URLSession
+
+    init(urlSession: URLSession) {
+        self.urlSession = urlSession
+    }
+
     private enum NetworkError: Error {
         case codeError
     }
@@ -15,7 +14,7 @@ struct NetworkClient {
     func fetch(url: URL, handler: @escaping (Result<Data, Error>) -> Void) {
         let request = URLRequest(url: url)
 
-        let task = URLSession.shared.dataTask(
+        let task = urlSession.dataTask(
             with: request
         ) { data, response, error in
             if let error = error {
@@ -24,7 +23,7 @@ struct NetworkClient {
             }
 
             if let response = response as? HTTPURLResponse,
-                response.statusCode < 200 && response.statusCode >= 300 {
+                response.statusCode < 200 || response.statusCode >= 300 {
                 handler(.failure(NetworkError.codeError))
                 return
             }

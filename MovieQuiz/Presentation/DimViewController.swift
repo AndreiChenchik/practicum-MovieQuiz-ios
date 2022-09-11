@@ -1,13 +1,6 @@
-//
-//  DimViewController.swift
-//  MovieQuiz
-//
-//  Created by Andrei Chenchik on 11/8/22.
-//
-
 import UIKit
 
-class DimViewController: UIViewController {
+final class DimViewController: UIViewController {
     private let dimView = UIView()
     private let dimmedViewController: UIViewController
 
@@ -61,7 +54,7 @@ class DimViewController: UIViewController {
         ) { [weak self] in
             self?.dimView.backgroundColor =
             isEnabled
-            ? .ypBackground
+            ? .init(colorAsset: .ypBackground)
             : .clear
         }
     }

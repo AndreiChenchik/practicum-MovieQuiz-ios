@@ -1,12 +1,9 @@
 import UIKit
 
 final class MovieQuizViewController: UIViewController {
-    private var state = GameState()
+    private var presenter: MovieQuizPresenter?
 
-    private var questionFactory: QuestionFactoryProtocol?
-    private var resultPresenter: ResultPresenterProtocol?
-    private var statisticService: StatisticsService?
-
+    @IBOutlet private weak var imageViewContainer: UIView!
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var textLabel: UILabel!
     @IBOutlet private weak var counterLabel: UILabel!
@@ -14,33 +11,81 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private weak var yesButton: UIButton!
     @IBOutlet private weak var noButton: UIButton!
 
-    private var activityIndicator = UIActivityIndicatorView()
+    private var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
+        indicator.accessibilityIdentifier = "Loading Indicator"
+        return indicator
+    }()
+}
 
-    // MARK: - Lifecycle
 
+// MARK: - Lifecycle
+
+extension MovieQuizViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
         configureActivityIndicator()
+        createPresenter()
+    }
 
-        questionFactory = QuestionFactory(
-            moviesLoader: MoviesLoader(),
-            postersLoader: PostersLoader(),
-            delegate: self
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if
+            let window = UIApplication.shared.windows.first,
+            let bottomConstraint = view.constraints
+                .filter({ $0.identifier == "stackViewLowerConstraint" }).first {
+            let isDeviceWithoutButton = window.safeAreaInsets.bottom > 0
+            bottomConstraint.constant = isDeviceWithoutButton ? 0 : 20
+        }
+    }
+}
+
+
+// MARK: - Dependencies
+
+extension MovieQuizViewController {
+    private func createPresenter() {
+        let userDefaults = UserDefaults.standard
+        let statisticService = StatisticsService(userDefaults: userDefaults)
+        let resultPresenter = ResultPresenter(statisticService: statisticService)
+
+        let urlSessionConfiguration = URLSessionConfiguration.default
+        let size200mb = 200 * 1024 * 1024
+        let urlCache = URLCache(
+            memoryCapacity: size200mb,
+            diskCapacity: size200mb
+        )
+        urlSessionConfiguration.urlCache = urlCache
+        let urlSession = URLSession(
+            configuration: urlSessionConfiguration
+        )
+        let networkClient = NetworkClient(urlSession: urlSession)
+
+        let questionLoader = QuestionFactory(
+            moviesLoader: MoviesLoader(networkClient: networkClient),
+            postersLoader: PosterLoader(networkClient: networkClient)
         )
 
-        let statisticService = StatisticServiceImplementation()
-        self.statisticService = statisticService
+        let gameState = GameState()
 
-        resultPresenter = ResultPresenter(statisticService: statisticService)
+        presenter = MovieQuizPresenter(
+            statisticService: statisticService,
+            questionLoader: questionLoader,
+            resultPresenter: resultPresenter,
+            state: gameState,
+            viewController: self
+        )
 
-        loadData()
+        questionLoader.delegate = presenter
     }
+}
 
-    private func loadData() {
-        activityIndicator.startAnimating()
-        questionFactory?.loadData()
-    }
+
+// MARK: - Setup UI
+
+extension MovieQuizViewController {
+    override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent }
 
     private func configureActivityIndicator() {
         view.addSubview(activityIndicator)
@@ -52,39 +97,45 @@ final class MovieQuizViewController: UIViewController {
             activityIndicator.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
         ])
     }
+}
 
-    private func showNetworkError(message: String) {
-        activityIndicator.stopAnimating()
 
-        let alertController = UIAlertController(
-            title: "Error", message: message, preferredStyle: .alert
-        )
+// MARK: - UI Events
 
-        let alertAction = UIAlertAction(
-            title: "Try again",
-            style: .default
-        ) { [weak self] _ in
-            self?.loadData()
-        }
-
-        alertController.addAction(alertAction)
-
-        present(alertController, animated: true)
+extension MovieQuizViewController {
+    @IBAction private func yesButtonClicked(_ sender: Any) {
+        presenter?.yesButtonClicked()
     }
 
-    private func show(question model: QuizStepViewModel) {
+    @IBAction private func noButtonClicked(_ sender: Any) {
+        presenter?.noButtonClicked()
+    }
+}
+
+
+// MARK: - UI Updates
+
+extension MovieQuizViewController: MovieQuizViewControllerProtocol {
+    func showLoadingIndicator() {
+        activityIndicator.startAnimating()
+    }
+
+    func hideLoadingIndicator() {
+        activityIndicator.stopAnimating()
+    }
+
+    func show(question model: QuizStepViewModel) {
         textLabel.text = model.question
         counterLabel.text = model.questionNumber
 
-        UIView.animate(withDuration: 0.25) { [weak self] in
-            self?.imageView.layer.borderWidth = 0
-        }
+        imageViewContainer.animateBorderWidth(toValue: 0, duration: 0.25)
 
         UIView.transition(
             with: imageView,
             duration: 0.25,
             options: .transitionCrossDissolve
         ) { [weak self] in
+            self?.imageView.alpha = 1
             self?.imageView.image = model.image
         } completion: { [weak self] _ in
             guard let self = self else { return }
@@ -94,128 +145,33 @@ final class MovieQuizViewController: UIViewController {
         }
     }
 
-    private func show(isAnswerCorrect: Bool) {
+    func highlightImageBorder(isAnswerCorrect: Bool) {
         yesButton.isEnabled = false
         noButton.isEnabled = false
 
-        UIView.animate(withDuration: 0.25) { [weak self] in
-            guard let self = self else { return }
-
-            self.imageView.layer.borderWidth = 8
-            self.imageView.layer.borderColor =
+        imageViewContainer.layer.borderColor =
             isAnswerCorrect
-            ? UIColor.ypGreen.cgColor
-            : UIColor.ypRed.cgColor
-        }
+            ? UIColor(colorAsset: .ypGreen).cgColor
+            : UIColor(colorAsset: .ypRed).cgColor
+        imageViewContainer.animateBorderWidth(toValue: 8, duration: 0.25)
     }
 
-    @IBAction private func yesButtonClicked(_ sender: Any) {
-        processAnswer(answer: true)
-    }
+    func showNetworkError(message: String) {
+        activityIndicator.stopAnimating()
 
-    @IBAction private func noButtonClicked(_ sender: Any) {
-        processAnswer(answer: false)
-    }
-}
-
-
-// MARK: - QuestionFactoryDelegate
-
-extension MovieQuizViewController: QuestionFactoryDelegate {
-    func didLoadDataFromServer() {
-        questionFactory?.requestNextQuestion()
-    }
-
-    func didFailToLoadData(with error: Error) {
-        DispatchQueue.main.async { [weak self] in
-            self?.showNetworkError(message: error.localizedDescription)
-        }
-    }
-
-    func didReceiveNextQuestion(question: QuizQuestion?) {
-        guard let question = question else { return }
-
-        self.state.currentQuestion = question
-        self.state.currentQuestionNumber += 1
-
-        let questionNumber = self.state.currentQuestionNumber
-        let questionsAmount = self.state.questionsAmount
-        let questionViewModel = convert(
-            from: question,
-            with: "\(questionNumber)/\(questionsAmount)"
+        let alertController = UIAlertController(
+            title: "Error", message: message, preferredStyle: .alert
         )
 
-        DispatchQueue.main.async {
-            self.activityIndicator.stopAnimating()
-            self.show(question: questionViewModel)
+        let alertAction = UIAlertAction(
+            title: "Try again",
+            style: .default
+        ) { [weak presenter] _ in
+            presenter?.retryLoadingOnError()
         }
+
+        alertController.addAction(alertAction)
+
+        present(alertController, animated: true)
     }
-}
-
-
-// MARK: - Game logic
-
-extension MovieQuizViewController {
-    private func processAnswer(answer: Bool) {
-        guard let currentQuestion = state.currentQuestion else { return }
-
-        let isCorrect = answer == currentQuestion.correctAnswer
-        state.currentScore += isCorrect ? 1 : 0
-
-        show(isAnswerCorrect: isCorrect)
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
-            self.showNextQuestionOrResults()
-        }
-    }
-
-    private func showNextQuestionOrResults() {
-        if state.currentQuestionNumber >= state.questionsAmount {
-            statisticService?.store(
-                correct: state.currentScore, total: state.questionsAmount
-            )
-
-            resultPresenter?.displayResults(
-                from: state,
-                over: self
-            ) { [weak self] in
-                self?.questionFactory?.requestNextQuestion()
-            }
-
-            state.currentScore = 0
-            state.currentQuestionNumber = 0
-        } else {
-            activityIndicator.startAnimating()
-            questionFactory?.requestNextQuestion()
-        }
-    }
-}
-
-
-// MARK: - Data Converters
-
-extension MovieQuizViewController {
-    private func convert(
-        from model: QuizQuestion,
-        with number: String
-    ) -> QuizStepViewModel {
-        let image = UIImage(data: model.image) ?? .remove
-        let question = model.text
-        let questionNumber = number
-
-        let viewModel = QuizStepViewModel(
-            image: image,
-            question: question,
-            questionNumber: questionNumber
-        )
-
-        return viewModel
-    }
-}
-
-
-// MARK: - StatusBar style
-
-extension MovieQuizViewController {
-    override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent }
 }

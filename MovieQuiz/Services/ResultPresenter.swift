@@ -1,17 +1,9 @@
-//
-//  ResultPresenter.swift
-//  MovieQuiz
-//
-//  Created by Andrei Chenchik on 11/8/22.
-//
-
-import Foundation
 import UIKit
 
-final class ResultPresenter: ResultPresenterProtocol {
-    let statisticService: StatisticsService
+final class ResultPresenter: ResultPresenting {
+    let statisticService: StatisticsStoring & StatisticsReporting
 
-    init(statisticService: StatisticsService) {
+    init(statisticService: StatisticsStoring & StatisticsReporting) {
         self.statisticService = statisticService
     }
 
@@ -44,15 +36,14 @@ final class ResultPresenter: ResultPresenterProtocol {
     }
 
     private func convert(from state: GameState) -> QuizResultViewModel {
-        let isIdealSession = state.currentScore == state.questionsAmount
+        let totalQuestions = state.questionsAmount
+        let isIdealSession = state.currentScore == totalQuestions
+
         let title =
             isIdealSession
             ? "Идеальный результат!"
             : "Этот раунд окончен!"
-
         let buttonText = "Сыграть еще раз"
-
-        let totalQuestions = state.questionsAmount
 
         let totalAccuracy = statisticService.totalAccuracy
         let accuracyDescription = String(format: "%.2f", totalAccuracy * 100)

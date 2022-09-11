@@ -1,22 +1,12 @@
-//
-//  StatisticsService.swift
-//  MovieQuiz
-//
-//  Created by Andrei Chenchik on 12/8/22.
-//
-
 import Foundation
 
-protocol StatisticsService {
-    var totalAccuracy: Double { get }
-    var gamesCount: Int { get }
-    var bestGame: GameRecord { get }
+final class StatisticsService: StatisticsStoring, StatisticsReporting {
+    private let userDefaults: UserDefaults
 
-    func store(correct count: Int, total amount: Int)
-}
+    init(userDefaults: UserDefaults) {
+        self.userDefaults = userDefaults
+    }
 
-final class StatisticServiceImplementation: StatisticsService {
-    private let userDefaults = UserDefaults.standard
 
     private enum Keys: String {
         case totalAccuracy, bestGame, gamesCount
@@ -52,10 +42,10 @@ final class StatisticServiceImplementation: StatisticsService {
         }
     }
 
-    func store(correct count: Int, total amount: Int) {
+    func store(correct count: Int, total amount: Int, date: Date) {
         let gameRecord = bestGame
         let newGameRecord = GameRecord(
-            correct: count, total: amount, date: Date()
+            correct: count, total: amount, date: date
         )
 
         totalAccuracy = (

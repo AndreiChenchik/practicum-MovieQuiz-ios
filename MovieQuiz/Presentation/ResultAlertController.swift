@@ -1,14 +1,11 @@
-//
-//  ResultAlertController.swift
-//  MovieQuiz
-//
-//  Created by Andrei Chenchik on 11/8/22.
-//
-
 import UIKit
 
+protocol DimmedViewControllerDelegate: AnyObject {
+    func dimmedViewWillDisappear()
+    func dimmedViewDidDisappear()
+}
 
-class ResultAlertController: UIAlertController {
+final class ResultAlertController: UIAlertController {
     weak var delegate: DimmedViewControllerDelegate?
 
     override func viewWillDisappear(_ animated: Bool) {
